@@ -26,13 +26,15 @@ export function parseTag(input: string, next: TagParser) {
     : new RegExp(`\\-\\-${tag}\\="([^\x01]*)"`, 'gi')
   const patch = input.replaceAll('" "', '"\x01"').replaceAll('" -', '"\x01-')
   const val = [...patch.matchAll(exp)].map(([, arg]) => (parser ? parser(arg) : arg))
+  const [first] = val
   clearInput(next)
-  return multiple ? val : val[val.length - 1]
+  const valueExists = multiple ? val : first
+  return !first ? undefined : valueExists
 }
 export function parseArg<T>(input: string, parser: ParserFn<T>) {
   const [arg] = input.replaceAll('" "', '"\x01"').replaceAll('" -', '"\x01-').split('\x01')
   updateInput(arg)
-  return parser(arg.replaceAll(/^"(.*)"$/g, '$1'))
+  return input ? parser(arg.replaceAll(/^"(.*)"$/g, '$1')) : undefined
 }
 
 export { RegisterParser } from './register'

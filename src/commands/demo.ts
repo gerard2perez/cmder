@@ -1,9 +1,8 @@
 import { arg, tag } from '@cmder'
 
-const income: Income[] = tag('income', 'i', 'team member')
-const demo: string = tag('demo', 'd', 'team member')
-
 const age: number = arg() ?? 10
+const income: Income[] = tag('income', 'i', 'team member') ?? []
+const demo: string = tag('demo', 'd', 'team member') ?? 'she'
 
 console.log({ age, income, demo })
 

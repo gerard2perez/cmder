@@ -1,6 +1,8 @@
 import { arg } from '@cmder'
 
+console.log('===')
 const command: string = arg()
+console.log('===')
 
 export default async function cmder() {
   const moduleCommand = `../commands/${command}.ts`

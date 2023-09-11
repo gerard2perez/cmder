@@ -1,8 +1,9 @@
 import { _getArgv } from './getArgv'
 
-let input = ''
+let input: string | undefined
 export function getInput() {
-  if (!input) {
+  if (input === undefined) {
+    input = ''
     const args = _getArgv()
     for (let i = 0; i < args.length; i++) {
       const cArg = args.at(i)
@@ -21,11 +22,11 @@ export function getInput() {
   return input
 }
 export function updateInput(subs: string) {
-  input = input.replace(subs, '').trim()
+  input = input!.replace(subs, '').trim()
 }
 export function clearInput(config: TagParser) {
   const tagExp = new RegExp(` ?\\-+${config.tag}\\="[^" ]*"`, 'gi')
-  input = input.replaceAll(tagExp, '').trim()
+  input = input!.replaceAll(tagExp, '').trim()
   if (config.alias) {
     const aliasExp = new RegExp(` ?\\-+${config.alias}\\="[^" ]*"`, 'gi')
     input = input.replaceAll(aliasExp, '').trim()
