@@ -1,7 +1,7 @@
 let argv: string[] = []
 function _getArgv() {
   if (!argv.length) {
-    argv = process.argv.splice(2)
+    argv = [...process.argv].splice(2)
   }
   return argv
 }

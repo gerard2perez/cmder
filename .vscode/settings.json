@@ -1,14 +1,18 @@
 {
     "explorer.fileNesting.patterns": {
-        "*.ts": "${capture}.js,${capture}.test.ts"
+        "*.ts": "${capture}.js,${capture}.test.ts,${capture}.mock.ts"
     },
     "explorer.fileNesting.enabled": true,
     "editor.formatOnSave": false,
     "editor.codeActionsOnSave": {
-        "source.fixAll": false,
+        "source.fixAll": true,
         "source.organizeImports": false
     },
     "cSpell.words": [
         "cmder"
-    ]
+    ],
+    "files.associations": {
+        "*.cmdr": "typescript"
+    }
+    
 }

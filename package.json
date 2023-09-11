@@ -1,9 +1,11 @@
 {
-  "name": "@g2p/cmdr",
+  "name": "@g2p/cmder",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "scripts": {
+    "compile": "NODE_ENV=compile bun build demo.ts --compile --outfile mycli",
+    "demo": "bun demo.ts 26 -i=10:0.15 -i=5:0 -d \"casa de mi heroe\"",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache"
   },
   "author": "Gerardo Pérez <gerard2perez@outlook.com>",

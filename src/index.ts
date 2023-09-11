@@ -1,5 +1,2 @@
-import './meta-loader'
-//
-import './input'
-export { arg } from './arg'
-export { tag } from './tag'
+import cmder from '@cmder'
+cmder()

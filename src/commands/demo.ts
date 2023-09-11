@@ -7,6 +7,8 @@ const age: number = arg() ?? 10
 
 console.log({ age, income, demo })
 
+// await new Promise((resolve) => setTimeout(resolve, 5000))
+
 // const { team, owner } = command<inputs>`[fcc] d: search for the current tag
 //     [string] --team -t the team to look for tags
 //     [string] --owner -o retired member of the team

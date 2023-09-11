@@ -1,1 +1,1 @@
-preload = ["./plugins/cmd-loader.ts"]
+preload = ["./src/cmderPlugin.ts"]
