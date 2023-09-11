@@ -11,23 +11,6 @@ export const cmderLoader: BunPlugin = {
     }
     const { readFileSync, readdirSync } = await import('fs')
 
-    // build.onLoad({ filter: /src\/index.ts/ }, (args) => {
-    //   const commands = readdirSync('./src/commands')
-    //   const code = readFileSync(args.path, 'utf8')
-    //   const added = `${code}
-    //   if(process.env.AUTO_IMPORT_COMMANDS==="true") {
-    //     try{
-    //     ${commands.map((cmd) => `await import('./commands/${cmd}');`).join('\n')}
-    //     }catch(err){}
-    //   }
-    //   `
-    //   const contents = transpiler.transformSync(added)
-    //   return {
-    //     contents,
-    //     loader: 'ts',
-    //   }
-    // })
-    // demo: async () => await import('../commands/demo'),
     build.onLoad({ filter: /cmder.ts/ }, (args) => {
       const commands = readdirSync(Bun.env.SUB_MODULES as string).map((cmd) => cmd.replace('.ts', ''))
       const code = readFileSync(args.path, 'utf8')

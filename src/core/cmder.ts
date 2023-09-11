@@ -1,10 +1,10 @@
 import { arg } from '@cmder'
-
-console.log('===')
 const command: string = arg()
-console.log('===')
 
 export default async function cmder() {
+  if (Bun.env.SUB_MODULES && !command) {
+    throw new Error(' A comand is required')
+  }
   const moduleCommand = `../commands/${command}.ts`
   const isCompiled = import.meta.url.includes('compiled')
   if (process.env.NODE_ENV === 'production' && isCompiled) {

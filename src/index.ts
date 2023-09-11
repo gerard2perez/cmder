@@ -1,2 +1,2 @@
 import cmder from '@cmder'
-cmder()
+await cmder()
