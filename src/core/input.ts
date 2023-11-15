@@ -8,11 +8,13 @@ export function getInput() {
     for (let i = 0; i < args.length; i++) {
       const cArg = args.at(i)
       const nArg = args.at(i + 1)
-      if (cArg?.startsWith('-') && !nArg?.startsWith('-')) {
+      if (cArg?.startsWith('-') && nArg && !nArg.startsWith('-')) {
         input += ` ${cArg}="${nArg}"`
         i++
-      } else if (cArg?.startsWith('-')) {
+      } else if (cArg?.startsWith('-') && cArg?.includes('=')) {
         input += ` ${cArg.replace(/=(.*)/g, '="$1"')}`
+      } else if (cArg?.startsWith('-')) {
+        input += ` ${cArg}`
       } else {
         input += ` "${cArg}"`
       }
@@ -25,10 +27,14 @@ export function updateInput(subs: string) {
   input = input!.replace(subs, '').trim()
 }
 export function clearInput(config: TagParser) {
-  const tagExp = new RegExp(` ?\\-+${config.tag}\\="[^" ]*"`, 'gi')
+  const tagParam = config.compact ? '' : '\\="[^" ]*"'
+  const tagExp = new RegExp(` ?\\-+${config.tag}${tagParam}`, 'gi')
   input = input!.replaceAll(tagExp, '').trim()
   if (config.alias) {
-    const aliasExp = new RegExp(` ?\\-+${config.alias}\\="[^" ]*"`, 'gi')
+    const aliasExp = new RegExp(` ?\\-+${config.alias}${tagParam}`, 'gi')
     input = input.replaceAll(aliasExp, '').trim()
   }
+}
+export function resetInput() {
+  input = undefined
 }

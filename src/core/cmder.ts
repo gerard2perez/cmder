@@ -3,7 +3,7 @@ const command: string = arg()
 
 export default async function cmder() {
   if (Bun.env.SUB_MODULES && !command) {
-    throw new Error(' A comand is required')
+    throw new Error(' A command is required')
   }
   const moduleCommand = `../commands/${command}.ts`
   const isCompiled = import.meta.url.includes('compiled')
