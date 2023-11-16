@@ -8,10 +8,10 @@ export function SyncArg(type: string) {
   argMap.push(type)
 }
 export function getParserInformation(tag: string) {
-  const { type, multiple } = tagMap.get(tag)!
+  const { type, multiple } = tagMap.get(tag) ?? { type: 'string', multiple: false }
   const parser = parserMap.get(type) ?? ((input: string) => input)
   return {
-    type,
+    compact: type === 'boolean',
     multiple,
     parser,
   }
@@ -20,12 +20,11 @@ export function getArgParser() {
   return parserMap.get(argMap.shift()!) ?? ((text: unknown) => text)
 }
 export function parseTag(input: string, next: TagParser) {
-  const { tag, alias, parser, multiple } = next
-  const exp = alias
-    ? new RegExp(`[\\-\\-${tag}|\\-${alias}]\\="([^\x01]*)"`, 'gi')
-    : new RegExp(`\\-\\-${tag}\\="([^\x01]*)"`, 'gi')
+  const { compact, tag, alias, parser, multiple } = next
+  const tagParam = compact ? '' : '\\="([^\x01]*)"'
+  const exp = alias ? new RegExp(`(--${tag}|-${alias})${tagParam}`, 'gi') : new RegExp(`--${tag}${tagParam}`, 'gi')
   const patch = input.replaceAll('" "', '"\x01"').replaceAll('" -', '"\x01-')
-  const val = [...patch.matchAll(exp)].map(([, arg]) => (parser ? parser(arg) : arg))
+  const val = [...patch.matchAll(exp)].map(([, , arg]) => (parser ? parser(arg) : arg))
   const [first] = val
   clearInput(next)
   const valueExists = multiple ? val : first
