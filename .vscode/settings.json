@@ -1,6 +1,6 @@
 {
     "explorer.fileNesting.patterns": {
-        "*.ts": "${capture}.js,${capture}.test.ts,${capture}.mock.ts"
+        "*.ts": "${capture}.js,${capture}.test.ts,${capture}.mock.ts,${capture}.hp"
     },
     "explorer.fileNesting.enabled": true,
     "editor.formatOnSave": false,
