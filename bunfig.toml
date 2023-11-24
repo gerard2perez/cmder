@@ -1,1 +1,7 @@
 preload = ["./src/cmderPlugin.ts"]
+
+[test]
+
+# always enable coverage
+coverage = true
+coverageSkipTestFiles = true       # default false
