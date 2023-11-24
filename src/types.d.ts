@@ -23,7 +23,6 @@ interface ParameterMeta {
   multiple: boolean
   compact: boolean
   name: string
-  args: string[]
 }
 interface CommandMeta {
   command: string

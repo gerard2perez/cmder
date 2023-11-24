@@ -1,6 +1,6 @@
 import { arg, tag } from '@cmder'
 import { SyncArg, SyncTag } from '@cmder/parser'
-import renderHelp from '@cmder/renderHelp'
+import helpRenderer from '@cmder/help-renderer'
 SyncArg('string')
 SyncTag('help', 'boolean', false)
 const command: string = arg()
@@ -31,7 +31,7 @@ export default async function cmder() {
 
   if (help) {
     const helpContent = await cmd()
-    renderHelp(helpContent.content, command, helpContent.data)
+    helpRenderer(helpContent.content, helpContent.data)
     return
   }
   await (await cmd()).default?.()

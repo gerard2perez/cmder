@@ -1,4 +1,4 @@
-import { tagCompiler } from '@cmder/tag-compiler'
+import { textCompiler } from '@cmder/text-formatter/text-compiler'
 
 type Options = {
   tagLength?: number
@@ -25,12 +25,11 @@ function joinListWith(list: ParameterMeta[], render: typeof renderArg, separator
     .join(separator)}`
 }
 
-export default async function renderHelp(content: string, command: string, meta: CommandMeta) {
+export default async function helpRenderer(content: string, meta: CommandMeta) {
   let text = content
   meta.tag.push({
     name: 'verbose',
     alias: 'v',
-    args: ['', 'h'],
     compact: true,
     multiple: false,
     type: 'boolean',
@@ -38,7 +37,6 @@ export default async function renderHelp(content: string, command: string, meta:
   meta.tag.push({
     name: 'help',
     alias: 'h',
-    args: ['', 'h'],
     compact: true,
     multiple: false,
     type: 'boolean',
@@ -64,8 +62,8 @@ export default async function renderHelp(content: string, command: string, meta:
       (prev, curr) => {
         prev[`tags.${curr.name}`] = renderTag(curr, { tagLength })
         prev[`tags.${curr.name}.tag`] = `{--${curr.name}|gray}`
-        prev[`tags.${curr.name}.alias`] = `{-${curr.alias}|cyan}`
-        prev[`tags.${curr.name}.description`] = `{${curr.description}|white}` ?? ''
+        prev[`tags.${curr.name}.alias`] = curr.alias ? `{-${curr.alias}|cyan}` : ''
+        prev[`tags.${curr.name}.description`] = curr.description ? `{${curr.description}|white}` : ''
         return prev
       },
       {} as Record<string, string>,
@@ -75,5 +73,5 @@ export default async function renderHelp(content: string, command: string, meta:
   Object.entries(template).forEach(([key, value]) => {
     text = text.replace(`%${key}%`, value)
   })
-  console.log(tagCompiler`${text}`)
+  console.log(textCompiler`${text}`)
 }
