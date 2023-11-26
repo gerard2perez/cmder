@@ -1,6 +1,6 @@
-import { arg, tag } from '@cmder'
-import { SyncArg, SyncTag } from '@cmder/parser'
-import helpRenderer from '@cmder/help-renderer'
+import { arg, tag } from './'
+import { SyncArg, SyncTag } from './parser'
+import helpRenderer from './help-renderer'
 SyncArg('string')
 SyncTag('help', 'boolean', false)
 const command: string = arg()
@@ -10,19 +10,11 @@ export default async function cmder() {
   if (Bun.env.SUB_MODULES && !command && !help) {
     throw new Error(' A command is required')
   }
-  const moduleCommand = `../commands/${command}.ts`
-  const isCompiled = import.meta.url.includes('compiled')
   const commands = [
     // autodetect files
   ] as string[]
-
   if (!commands.includes(command)) {
     throw new Error(`A command named '${command}' does not exits`)
-  }
-
-  if (!(process.env.NODE_ENV === 'production' && isCompiled)) {
-    //Local dev
-    await import(moduleCommand)
   }
   const originalScope = {
     // import hack

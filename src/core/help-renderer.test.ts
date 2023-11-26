@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { textCompiler } from '@cmder/text-formatter/text-compiler'
+import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'
 import helpRenderer from './help-renderer'
 import { describe, test, expect, spyOn, beforeEach } from 'bun:test'
 const log = spyOn(console, 'log')

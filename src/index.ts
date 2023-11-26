@@ -1,2 +1,2 @@
-import cmder from '@cmder'
+import cmder from './core'
 await cmder()

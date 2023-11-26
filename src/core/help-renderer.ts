@@ -1,4 +1,4 @@
-import { textCompiler } from '@cmder/text-formatter/text-compiler'
+import { textCompiler } from './text-formatter/text-compiler'
 
 type Options = {
   tagLength?: number

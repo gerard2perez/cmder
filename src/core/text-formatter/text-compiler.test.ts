@@ -1,5 +1,5 @@
-import { RegisterFormatter } from '@cmder/text-formatter/register-formatter'
-import { textCompiler } from '@cmder/text-formatter/text-compiler'
+import { RegisterFormatter } from '@g2p/cmder/text-formatter/register-formatter'
+import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'
 
 describe('textCompiler', () => {
   test('no formatter registered', () => {

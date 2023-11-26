@@ -34,10 +34,10 @@
       "@commands/*": [
         "./commands/*"
       ],
-      "@cmder": [
+      "@g2p/cmder": [
         "./core"
       ],
-      "@cmder/*": [
+      "@g2p/cmder/*": [
         "./core/*"
       ]
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */

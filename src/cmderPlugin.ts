@@ -1,3 +1,3 @@
-import { cmderLoader } from '@cmder/cmderLoader'
+import { cmderLoader } from './core/loaders/cmder-loader'
 
 Bun.plugin(cmderLoader)

@@ -1,4 +1,4 @@
-import { textCompiler } from '@cmder/text-formatter/text-compiler'
+import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'
 import './colors'
 
 describe('chalk formater', () => {
