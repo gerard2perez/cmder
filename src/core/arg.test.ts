@@ -1,13 +1,13 @@
 import { setArgv } from './test-utils'
 // must be imported second
 import { arg } from './arg'
-import { getInput, updateInput } from './input'
+import { resetInput } from './input'
 import { RegisterParser, SyncArg } from './parser/index'
 import numberParser from './parsers/numberParser'
 
 describe('arg', () => {
-  afterEach(() => {
-    updateInput(getInput())
+  beforeEach(() => {
+    resetInput()
   })
   test('string parser', () => {
     setArgv(['this is my team', '-v'])

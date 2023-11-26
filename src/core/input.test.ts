@@ -3,6 +3,9 @@ import { setArgv } from './test-utils'
 import { clearInput, getInput, updateInput, resetInput } from './input'
 
 describe('input', () => {
+  beforeAll(() => {
+    resetInput()
+  })
   afterEach(() => {
     updateInput(getInput())
     resetInput()

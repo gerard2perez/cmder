@@ -1,18 +1,18 @@
 import { setArgv } from './test-utils'
 // must be imported second
-import { getInput, updateInput } from './input'
+import { resetInput } from './input'
 import { RegisterParser, SyncTag } from './parser/index'
 import numberParser from './parsers/numberParser'
 import { tag } from './tag'
 
 describe('tag', () => {
   afterEach(() => {
-    updateInput(getInput())
+    resetInput()
   })
   test('string parser', () => {
     setArgv(['--team', 'this is my team'])
     SyncTag('team', 'string', false)
-    const team: string = tag('team', '-t', 'this is my team')
+    const team = tag<string>('team', 't', 'this is my team')
 
     expect(team).toBe('this is my team')
   })
@@ -20,7 +20,7 @@ describe('tag', () => {
   test('string[] parser', () => {
     setArgv(['--member', 'john', '-m', 'doe'])
     SyncTag('member', 'string', true)
-    const members: string[] = tag('member', '-m', 'name of team member')
+    const members = tag<string[]>('member', 'm', 'name of team member')
     expect(members).toEqual(['john', 'doe'])
   })
 
@@ -31,11 +31,11 @@ describe('tag', () => {
     SyncTag('team', 'string', false)
     SyncTag('age', 'number', false)
     // #endregion
-    const team: string = tag('team', 't')
-    const age: number = tag('age', 'a', 'age of the team')
+    const age = tag<number>('age', 'a', 'age of the team')
+    const team = tag<string>('team', 'this is a description')
 
-    expect(team).toBe('this is my team')
     expect(age).toBe(20)
+    expect(team).toBe('this is my team')
   })
 
   test('number[] parser', () => {
@@ -45,8 +45,8 @@ describe('tag', () => {
     SyncTag('team', 'string')
     SyncTag('age', 'number', true)
     // #endregion
-    const team: string = tag('team', 't')
-    const ages: number = tag('age', 'a', 'age of the team')
+    const team = tag<string>('team', 'this is a description')
+    const ages = tag<number>('age', 'a', 'age of the team')
 
     expect(team).toBe('this is my team')
     expect(ages).toEqual([20, 40])

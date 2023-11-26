@@ -3,6 +3,7 @@
         "*.ts": "${capture}.js,${capture}.test.ts,${capture}.mock.ts,${capture}.hp"
     },
     "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
     "editor.formatOnSave": false,
     "editor.codeActionsOnSave": {
         "source.fixAll": true,

@@ -2,7 +2,6 @@
 import { textCompiler } from '@cmder/text-formatter/text-compiler'
 import helpRenderer from './help-renderer'
 import { describe, test, expect, spyOn, beforeEach } from 'bun:test'
-const olog = console.log
 const log = spyOn(console, 'log')
 const commandConfig = {
   tag: [
