@@ -1,3 +1,7 @@
-This creates a beauty help
-    {arguments}
-    {tags}
+{%app% %command%|yellow} %arguments% {[options]|cyan}
+  {This creates a beauty help|white}
+   %tags%
+
+[theme]
+primary: red
+secondary: blue

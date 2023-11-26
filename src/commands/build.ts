@@ -1,5 +1,5 @@
 import { arg, tag } from '@g2p/cmder'
-import { cmderLoader } from '../core/loaders/cmder-loader'
+import { cmderLoader } from '@g2p/cmder/loaders/cmder-loader'
 import { build } from 'bun'
 import { readdirSync } from 'fs'
 import { resolve } from 'path'

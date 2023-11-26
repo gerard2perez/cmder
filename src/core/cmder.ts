@@ -18,12 +18,12 @@ export default async function cmder() {
   }
   const originalScope = {
     // import hack
-  } as Record<string, () => Promise<{ default: () => Promise<void>; content: string; data: CommandMeta }>>
+  } as Record<string, () => Promise<{ default: () => Promise<void>; content: string; data: CommandMeta; theme: Theme }>>
   const cmd = originalScope[help ? `${command}.hp` : command]
 
   if (help) {
     const helpContent = await cmd()
-    helpRenderer(helpContent.content, helpContent.data)
+    helpRenderer(helpContent.content, helpContent.data, helpContent.theme)
     return
   }
   await (await cmd()).default?.()

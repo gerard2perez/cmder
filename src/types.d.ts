@@ -29,3 +29,15 @@ interface CommandMeta {
   arg: ParameterMeta[]
   tag: ParameterMeta[]
 }
+interface Theme {
+  text: string
+  command: {
+    primary: string
+    secondary: string
+  }
+  arg: string
+  tag: {
+    primary: string
+    secondary: string
+  }
+}

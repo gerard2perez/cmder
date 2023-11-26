@@ -1,12 +1,11 @@
 import { type BunPlugin } from 'bun'
-import { basename, resolve } from 'path'
+import commandsStore, { getCommandName } from './commands-store'
+import HPResolver from './hp-resolver'
+import CommandResolver from './command-resolver'
 const transpiler = new Bun.Transpiler({
   loader: 'ts', // "js | "jsx" | "ts" | "tsx"
 })
-function getCommandName(urlpath: string) {
-  return basename(urlpath).replace('.hp', '').replace('.ts', '')
-}
-const commands = {} as Record<string, Record<string, object[] | string>>
+
 export const cmderLoader: BunPlugin = {
   target: 'bun',
   name: 'cmder loader',
@@ -59,9 +58,9 @@ export const cmderLoader: BunPlugin = {
             syncs.push(`SyncArg('${type}')`)
           }
           const command = getCommandName(args.path)
-          commands[command] = commands[command] ?? {}
-          commands[command].command = command
-          commands[command][kind] = commands[command][kind] ?? []
+          commandsStore[command] = commandsStore[command] ?? {}
+          commandsStore[command].command = command
+          commandsStore[command][kind] = commandsStore[command][kind] ?? []
 
           const _args = cmdArgs
             .replaceAll("'", '')
@@ -69,11 +68,11 @@ export const cmderLoader: BunPlugin = {
             .map((arg) => arg.trim())
             .filter((f) => f)
 
-          if ((commands[command][kind] as ParameterMeta[]).find((f) => f.name === name)) {
+          if ((commandsStore[command][kind] as ParameterMeta[]).find((f) => f.name === name)) {
             continue
           }
           // @ts-expect-error this is a array
-          commands[command][kind].push({
+          commandsStore[command][kind].push({
             type,
             multiple: !!multiple,
             compact: type === 'boolean',
@@ -96,74 +95,8 @@ export const cmderLoader: BunPlugin = {
     })
 
     // loader for .hp (help) files
-    build.onLoad({ filter: /.hp$/ }, (args) => {
-      const command = commands[getCommandName(args.path)]
-      const code = readFileSync(args.path, 'utf-8')
-      const contents = `export const content=\`${code}\`
-      export const data=${JSON.stringify(command, null, 2)}`
-      return {
-        contents: transpiler.transformSync(contents),
-        loader: 'js',
-      }
-    })
-    build.onLoad({ filter: /.hp$/, namespace: 'virtual' }, (args) => {
-      const command = commands[getCommandName(args.path)]
-      const code = readFileSync(args.path, 'utf-8')
-      const contents = `export const content=\`${code}\`
-      export const data=${JSON.stringify(command, null, 2)}`
-      return {
-        contents: transpiler.transformSync(contents),
-        loader: 'js',
-      }
-    })
-    build.onLoad({ filter: /.*$/, namespace: 'virtual' }, (args) => {
-      let code = readFileSync(args.path + '.ts', 'utf8')
-      const command = getCommandName(args.path)
-      commands[command] = commands[command] ?? { arg: [], tag: [] }
-      commands[command].command = command
-      if (code.search(/import.*(tag|arg).*from '@g2p\/cmder'/) > -1) {
-        const syncs = []
-        for (const [, , name, preType, kind, cmdArgs] of code.matchAll(
-          /(const|let) *(.*): *(.*) *= *(tag|arg)\((.*)\).*/g,
-        )) {
-          const [type, multiple] = preType.trim().split('[')
-          if (kind === 'tag') {
-            syncs.push(`SyncTag('${name}','${type}',${!!multiple})`)
-          } else {
-            syncs.push(`SyncArg('${type}')`)
-          }
-          commands[command][kind] = commands[command][kind] ?? []
-
-          const _args = cmdArgs
-            .replaceAll("'", '')
-            .split(',')
-            .map((arg) => arg.trim())
-            .filter((f) => f)
-
-          if ((commands[command][kind] as ParameterMeta[]).find((f) => f.name === name)) {
-            continue
-          }
-          // @ts-expect-error this is a array
-          commands[command][kind].push({
-            type,
-            multiple: !!multiple,
-            compact: type === 'boolean',
-            name,
-            alias: _args.length > 2 ? _args[1] : undefined,
-            description: _args[_args.length - 1],
-            args: _args,
-          })
-        }
-        code = `
-        import { SyncArg, SyncTag } from '@g2p/cmder/parser'
-          ${syncs.join('\n')}
-          ${code}`
-      }
-      const result = transpiler.transformSync(code.replaceAll(/(import .*)( with \{.*)(;)?/gm, '$1$3'))
-      return {
-        contents: result,
-        loader: 'ts',
-      }
-    })
+    build.onLoad({ filter: /.hp$/ }, HPResolver)
+    build.onLoad({ filter: /.hp$/, namespace: 'virtual' }, HPResolver)
+    build.onLoad({ filter: /.*$/, namespace: 'virtual' }, CommandResolver)
   },
 }
