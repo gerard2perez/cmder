@@ -15,7 +15,7 @@ export const cmderLoader: BunPlugin = {
     if (!(process.argv0 === 'bun' || process.argv0.includes('cmder'))) {
       return
     }
-    build.onResolve({ filter: /^virtual:/ }, (args) => {
+    build.onResolve({ filter: /virtual/ }, (args) => {
       const path = args.path.replace('virtual:', '')
       return {
         path,

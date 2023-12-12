@@ -3,5 +3,6 @@
    %tags%
 
 [theme]
-primary: red
-secondary: blue
+tag:
+  primary: red
+  secondary: blue

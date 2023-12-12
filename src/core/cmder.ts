@@ -1,10 +1,11 @@
 import { arg, tag } from './'
 import { SyncArg, SyncTag } from './parser'
 import helpRenderer from './help-renderer'
-SyncArg('string')
 SyncTag('help', 'boolean', false)
-const command: string = arg()
+SyncArg('string')
+
 const help: boolean = tag('help', 'h', 'Render help') ?? false
+const command: string = arg()
 
 export default async function cmder() {
   if (Bun.env.SUB_MODULES && !command && !help) {
@@ -13,7 +14,8 @@ export default async function cmder() {
   const commands = [
     // autodetect files
   ] as string[]
-  if (!commands.includes(command)) {
+
+  if (!help && !commands.includes(command)) {
     throw new Error(`A command named '${command}' does not exits`)
   }
   const originalScope = {
@@ -21,10 +23,17 @@ export default async function cmder() {
   } as Record<string, () => Promise<{ default: () => Promise<void>; content: string; data: CommandMeta; theme: Theme }>>
   const cmd = originalScope[help ? `${command}.hp` : command]
 
-  if (help) {
+  if (!cmd && help) {
+    const helpCommands = Object.keys(originalScope).filter((cmd) => cmd.includes('.hp'))
+
+    for (const helpCommand of helpCommands) {
+      const helpContent = await originalScope[helpCommand]()
+      helpRenderer(helpContent.content, helpContent.data, helpContent.theme)
+    }
+  } else if (help) {
     const helpContent = await cmd()
     helpRenderer(helpContent.content, helpContent.data, helpContent.theme)
-    return
+  } else {
+    await (await cmd()).default?.()
   }
-  await (await cmd()).default?.()
 }
