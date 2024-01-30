@@ -31,7 +31,12 @@ export function parseTag(input: string, next: TagParser) {
   return !first ? undefined : valueExists
 }
 export function parseArg<T>(input: string, parser: ParserFn<T>) {
-  const [arg] = input.replaceAll('" "', '"\x01"').replaceAll('" -', '"\x01-').split('\x01')
+  const arg =
+    input
+      .replaceAll('" "', '"\x01"')
+      .replaceAll('" -', '"\x01-')
+      .split('\x01')
+      .find((arg) => !arg.startsWith('-')) ?? ''
   updateInput(arg)
   return input ? parser(arg.replaceAll(/^"(.*)"$/g, '$1')) : undefined
 }
