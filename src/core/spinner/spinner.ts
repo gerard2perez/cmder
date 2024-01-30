@@ -1,15 +1,17 @@
 import logUpdate from 'log-update'
-import * as cliSpinners from 'cli-spinners'
+import cliSpinners from 'cli-spinners'
 import { textCompiler } from '../text-formatter/text-compiler'
-import randomDigits from './random-digits'
-import randomLetter from './random-letter'
+import randomDigits from './tick-compiler/random-digits'
+import randomLetter from './tick-compiler/random-letter'
+import './context-object/computed-context'
+export { computed } from './context-object/computed'
+
 /**
  * You use:
  * {frame} in order to display a spinner
  * {digits:FROM?:TO?} in order to create random digits
  * {letter:LENGTH?} in order to create random letters
  */
-
 export default function spinner(output: () => string) {
   const { interval, frames } = cliSpinners.dots
   let index = 0
