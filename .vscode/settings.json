@@ -14,6 +14,7 @@
     ],
     "files.associations": {
         "*.cmdr": "typescript"
-    }
+    },
+    "createTestFile.nameTemplate": "{filename}.test"
     
 }
