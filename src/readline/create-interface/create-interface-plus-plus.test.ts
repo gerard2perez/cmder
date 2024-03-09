@@ -56,7 +56,7 @@ let input = new STDIn()
 let output = new STDOut()
 const frame = () => 'Hello'
 
-describe.skip('Create Interface Plus Plus', () => {
+describe('Create Interface Plus Plus', () => {
   beforeEach(() => {
     input = new STDIn()
     output = new STDOut()
