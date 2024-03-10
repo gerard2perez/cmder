@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import chalk, { type ChalkInstance } from 'chalk'
 import { RegisterFormatter } from '../register-formatter'
+
 const Color = {
   black: 'black',
   red: 'red',
@@ -88,6 +89,7 @@ const chalkFns = [
     'bgWhiteBright',
   ],
 ]
+export const SolidColors = [Color.yellow, Color.green, Color.cyan, Color.magenta, Color.red, 'rgb:255:165:0']
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export type Color = keyof typeof Color
 export type Decoration = keyof typeof Decoration
