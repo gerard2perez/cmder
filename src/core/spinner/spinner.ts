@@ -3,8 +3,7 @@ import cliSpinners from 'cli-spinners'
 import { textCompiler } from '../text-formatter/text-compiler'
 import randomDigits from './tick-compiler/random-digits'
 import randomLetter from './tick-compiler/random-letter'
-import './context-object/computed-context'
-export { computed } from './context-object/computed'
+export { ref } from '@g2p/cmder/reactive/ref/ref'
 
 /**
  * You use:
