@@ -2,7 +2,7 @@
 import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'
 import helpRenderer from './help-renderer'
 import { describe, test, expect, spyOn, beforeEach } from 'bun:test'
-import { DEFAULT_THEME } from './loaders/hp-resolver'
+import { DEFAULT_HELP_THEME } from './help-default-theme'
 const log = spyOn(console, 'log')
 const commandConfig = {
   tag: [
@@ -43,7 +43,7 @@ describe('help-renderer', () => {
     {-v|cyan}{, |gray}{--verbose   |gray}
     {-h|cyan}{, |gray}{--help      |gray}
 `
-    await helpRenderer(template, commandConfig, DEFAULT_THEME)
+    await helpRenderer(template, commandConfig, DEFAULT_HELP_THEME)
 
     expect(result).toBe(expected)
   })
@@ -64,7 +64,7 @@ describe('help-renderer', () => {
     {choose a value|white}
 `
 
-    await helpRenderer(template, commandConfig, DEFAULT_THEME)
+    await helpRenderer(template, commandConfig, DEFAULT_HELP_THEME)
 
     expect(result).toBe(expected)
   })

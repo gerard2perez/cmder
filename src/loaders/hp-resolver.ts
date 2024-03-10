@@ -2,18 +2,8 @@ import commandsStore, { getCommandName } from './commands-store'
 import type { OnLoadArgs, OnLoadResult } from 'bun'
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
-export const DEFAULT_THEME: Theme = {
-  arg: 'green',
-  text: 'white',
-  command: {
-    primary: 'yellow',
-    secondary: 'yellow',
-  },
-  tag: {
-    primary: 'cyan',
-    secondary: 'gray',
-  },
-}
+import { DEFAULT_HELP_THEME } from '../core/help-default-theme'
+
 const transpiler = new Bun.Transpiler({
   loader: 'ts', // "js | "jsx" | "ts" | "tsx"
 })
@@ -24,14 +14,14 @@ export default function HPResolver(args: OnLoadArgs): OnLoadResult | Promise<OnL
   const [template, _theme = ''] = code.split('[theme]')
   const theme = parse(_theme.replaceAll(/rgb\((.*),(.*),(.*)\)/gm, '>\n rgb:$1:$2:$3')) as Theme
   const THEME = {
-    ...DEFAULT_THEME,
+    ...DEFAULT_HELP_THEME,
     ...theme,
     command: {
-      ...DEFAULT_THEME.command,
+      ...DEFAULT_HELP_THEME.command,
       ...theme?.command,
     },
     tag: {
-      ...DEFAULT_THEME.tag,
+      ...DEFAULT_HELP_THEME.tag,
       ...theme?.tag,
     },
   }

@@ -1,8 +1,8 @@
-preload = ["./src/cmderPlugin.ts"]
+preload = ["./src/plugins/cmder-plugin.ts"]
 
 [test]
 
 # always enable coverage
-preload = ["./src/test-pre-loader.ts"]
+preload = ["./src/plugins/test-pre-loader-plugin.ts"]
 coverage = true
 coverageSkipTestFiles = true       # default false
