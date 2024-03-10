@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createInterfacePlusPlus } from '@g2p/cmder/readline/create-interface/create-interface-plus-plus'
+// @ts-expect-error no protocol support
+import { createInterfacePlusPlus } from 'original:./create-interface-plus-plus'
 import { KEYS } from '@g2p/cmder/readline/create-interface/on-input-data'
 import { describe, test, expect, beforeEach } from 'bun:test'
 import { Stream } from 'stream'
