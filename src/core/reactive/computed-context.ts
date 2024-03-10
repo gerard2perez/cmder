@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isRef } from '@g2p/cmder/reactive/ref/ref'
+import { isRef } from '@g2p/cmder/reactive/ref'
 type ContextBUilder = {
   key: string
   regExp: RegExp
