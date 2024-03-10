@@ -3,7 +3,7 @@ import cliSpinners from 'cli-spinners'
 import { textCompiler } from '../text-formatter/text-compiler'
 import randomDigits from './tick-compiler/random-digits'
 import randomLetter from './tick-compiler/random-letter'
-export { ref } from '@g2p/cmder/reactive/ref/ref'
+export { ref } from '@g2p/cmder/reactive/ref'
 
 /**
  * You use:

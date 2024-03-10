@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { withContext } from '@g2p/cmder/reactive/ref/computed-context'
-import { ref } from '@g2p/cmder/reactive/ref/ref'
+import { withContext } from '@g2p/cmder/reactive/computed-context'
+import { ref } from '@g2p/cmder/reactive/ref'
 import { createInterfacePlusPlus } from '../create-interface/create-interface-plus-plus'
 import { statusManager } from './status-manager'
 import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'

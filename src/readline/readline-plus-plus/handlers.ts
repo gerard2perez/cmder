@@ -1,5 +1,5 @@
 import { OnDataEvents } from '@g2p/cmder/readline/create-interface/on-input-data'
-import type { Ref } from '@g2p/cmder/reactive/ref/ref'
+import type { Ref } from '@g2p/cmder/reactive/ref'
 import { ref } from '@g2p/cmder/spinner/spinner'
 import type { ReadStream } from 'node:tty'
 
