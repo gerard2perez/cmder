@@ -1,6 +1,6 @@
 import commandsStore, { getCommandName } from './commands-store'
 import type { OnLoadArgs, OnLoadResult } from 'bun'
-import { readFileSync } from 'node:fs'
+import { readFileSync, existsSync } from 'node:fs'
 import { parse } from 'yaml'
 import { DEFAULT_HELP_THEME } from '../core/help-default-theme'
 
@@ -10,7 +10,12 @@ const transpiler = new Bun.Transpiler({
 
 export default function HPResolver(args: OnLoadArgs): OnLoadResult | Promise<OnLoadResult> {
   const command = commandsStore[getCommandName(args.path)]
-  const code = readFileSync(args.path, 'utf-8')
+  const code = existsSync(args.path)
+    ? readFileSync(args.path, 'utf-8')
+    : `%app% %command% %arguments% {[options]|theme.tag.primary}
+  {This creates a beauty help|theme.text}
+   %tags%
+`
   const [template, _theme = ''] = code.split('[theme]')
   const theme = parse(_theme.replaceAll(/rgb\((.*),(.*),(.*)\)/gm, '>\n rgb:$1:$2:$3')) as Theme
   const THEME = {

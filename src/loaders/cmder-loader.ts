@@ -25,9 +25,10 @@ export const cmderLoader: BunPlugin = {
 
     // Detects all command in the project
     build.onLoad({ filter: /cmder.ts/ }, async (args) => {
-      const commands = readdirSync(Bun.env.SUB_MODULES ?? ('./src/commands' as string))
+      let commands = readdirSync(Bun.env.SUB_MODULES ?? ('./src/commands' as string))
         .map((cmd) => cmd.replace('.ts', ''))
-        .sort((a) => (a.includes('.hp') ? 1 : -1))
+        .filter((cmd) => !cmd.includes('.hp'))
+      commands = [...commands, ...commands.map((cmd) => `${cmd}.hp`)]
       const code = readFileSync(args.path, 'utf8')
       const injection = `// import hack\n${commands
         .map((cmd) => `['${cmd}']: async () => await import('virtual:${SUB_MODULES}/${cmd}'),`)
