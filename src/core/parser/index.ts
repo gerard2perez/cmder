@@ -24,7 +24,7 @@ export function parseTag(input: string, next: TagParser) {
   const tagParam = compact ? '' : '\\="([^\x01]*)"'
   const exp = alias ? new RegExp(`(--${tag}|-${alias})${tagParam}`, 'gi') : new RegExp(`(--${tag})${tagParam}`, 'gi')
   const patch = input.replaceAll('" "', '"\x01"').replaceAll('" -', '"\x01-')
-  const val = [...patch.matchAll(exp)].map(([, , arg]) => (parser ? parser(arg) : arg))
+  const val = [...patch.matchAll(exp)].map(([, tag, arg]) => (parser ? parser(arg || tag) : arg || tag))
   const [first] = val
   clearInput(next)
   const valueExists = multiple ? val : first
