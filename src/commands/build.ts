@@ -1,5 +1,5 @@
 import { arg, tag } from '@g2p/cmder'
-import { cmderLoader } from '@g2p/cmder/loaders/cmder-loader'
+import { cmderLoader } from 'loaders/cmder-loader'
 import { build } from 'bun'
 const entrypoint: string = arg()
 // const { default: proyPack } = await import(resolve('package.json'))
