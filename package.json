@@ -9,7 +9,8 @@
   },
   "typings": "./src/core/index.ts",
   "bin": {
-    "cmder": "./bin/index.js"
+    "cmder": "./bin/index.js",
+    "cdr": "./bun/cmder"
   },
   "scripts": {
     "autobuild": "NODE_ENV=production bun ./src/commands/build.ts build ./src -n cmder",
@@ -34,6 +35,7 @@
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
+    "lcov-parse": "^1.0.0",
     "prettier": "^3.2.4",
     "typescript": "^5.3.3"
   }

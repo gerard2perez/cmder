@@ -6,9 +6,9 @@ type Configuration = {
   onCancel: string
 }
 type ResolveType<T> = {
-  [K in keyof T]: T[K] extends () => Promise<infer V> ? V : never
+  [K in keyof T]: T[K] extends (...args: any) => Promise<infer V> ? V : never
 }
-export async function wizard<Keys extends string, T extends { [k in Keys]: () => Promise<unknown> }>(
+export async function wizard<Keys extends string, T extends { [k in Keys]: (...args: any) => Promise<unknown> }>(
   steps: T,
   { onCancel = `{${'✖'}|red} {message}` } = {} as Configuration,
 ) {

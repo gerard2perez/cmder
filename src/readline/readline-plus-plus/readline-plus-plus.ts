@@ -5,7 +5,7 @@ import { createInterfacePlusPlus } from '../create-interface/create-interface-pl
 import { statusManager } from './status-manager'
 import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'
 import { stdin as input, stdout as output } from 'node:process'
-import { GetHandlerReturnType, HandlerType } from '@g2p/cmder/readline/readline-plus-plus/handlers'
+import type { GetHandlerReturnType, HandlerType } from '@g2p/cmder/readline/readline-plus-plus/handlers'
 
 type Options<Context, Handler, ResponseType> = {
   hideCursor: boolean
