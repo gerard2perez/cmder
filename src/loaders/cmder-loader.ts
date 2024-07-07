@@ -47,7 +47,7 @@ export const cmderLoader: BunPlugin = {
     build.onLoad({ filter: /.ts/ }, (args) => {
       let code = readFileSync(args.path, 'utf8')
 
-      if (code.search(/import.*(tag|arg).*from '@g2p\/cmder'/) > -1) {
+      if (code.search(/import.*(tag|arg).*from.*@g2p\/cmder/) > -1) {
         const syncs = []
         for (const [, , name, preType, kind, cmdArgs] of code.matchAll(
           /(const|let) *(.*): *(.*) *= *(tag|arg)\((.*)\).*/g,

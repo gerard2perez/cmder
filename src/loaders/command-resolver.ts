@@ -11,7 +11,7 @@ export default function CommandResolver(args: OnLoadArgs): OnLoadResult | Promis
   const command = getCommandName(args.path)
   commandsStore[command] = commandsStore[command] ?? { arg: [], tag: [] }
   commandsStore[command].command = command
-  if (code.search(/import.*(tag|arg).*from '@g2p\/cmder'/) > -1) {
+  if (code.search(/import.*(tag|arg).*from.*@g2p\/cmder/) > -1) {
     const syncs = []
     for (const [, , name, preType, kind, cmdArgs] of code.matchAll(
       /(const|let) *(.*): *(.*) *= *(tag|arg)\((.*)\).*/g,

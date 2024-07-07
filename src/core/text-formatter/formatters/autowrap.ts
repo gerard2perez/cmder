@@ -2,8 +2,8 @@ import { RegisterFormatter } from '../register-formatter'
 
 const wordWrap = (size: number) => new RegExp(`([^\\n]{1,${size}})(\\s|$)`, 'g')
 
-RegisterFormatter((text = '', _start = '0') => {
-  const start = parseInt(_start)
+RegisterFormatter((text: string = '', size: string = '0') => {
+  const start = parseInt(size)
   let width = 80
   try {
     width = process.stdout.getWindowSize()[0]
@@ -11,11 +11,11 @@ RegisterFormatter((text = '', _start = '0') => {
     void 0
   }
 
-  const size = width - start
-  let result = ((text || '').match(wordWrap(size)) as string[]) || [text]
+  const fixedWidth = width - start
+  let result = ((text || '').match(wordWrap(fixedWidth)) as string[]) || [text]
   result = result.map((line, i) => {
     line = line.trim()
-    const spacesNeeded = size - line.length
+    const spacesNeeded = fixedWidth - line.length
     const shouldFill = i !== result.length - 1
     const currentSpaces = (line.match(/\w\b/g) || []).length - 1
     if (shouldFill && spacesNeeded > 0 && currentSpaces > 0) {
