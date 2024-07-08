@@ -1,7 +1,9 @@
 import { RegisterFormatter } from '../register-formatter'
-
+// this is another comment
 const wordWrap = (size: number) => new RegExp(`([^\\n]{1,${size}})(\\s|$)`, 'g')
-
+/**
+ * This is a comment
+ */
 RegisterFormatter((text: string = '', size: string = '0') => {
   const start = parseInt(size)
   let width = 80

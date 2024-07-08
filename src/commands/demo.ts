@@ -3,10 +3,32 @@ import { arg, tag } from '@g2p/cmder'
 import spinner from '@g2p/cmder/spinner/spinner'
 import { ref } from '@g2p/cmder/reactive/ref'
 import { withContext } from '@g2p/cmder/reactive/computed-context'
+// hello 0
+// /* hello 1 */
+// hello 2
+/**
+ * Hello 3
+ */
+/*
+  Hello 4
+*/
 
+/* Hello 5
+ */
+/** Hello 6 */
+/**
+ * Hello 7 */
+/**
+ * * Hello /*\*\/ \*\/ 8 ***/
+/**
+ ** Hello 9 */
 const age: number = arg() ?? 10
-const income: Income[] = tag('income', 'i', 'team member') ?? []
+/**
+ * Income for team members
+ */
+const income: Income[] = tag('income', 'i', 'team member') ?? [{ amount: 10, iva: 0.1 }]
 const demo: string = tag('demo', 'd', 'team member') ?? 'she'
+// this is a description
 const doit: boolean = tag('do', 'o', 'do something') ?? false
 
 const i = 0
