@@ -1,13 +1,17 @@
 import { promptSpy } from '@g2p/cmder/readline/readline-plus-plus/handlers'
 import { readLinePlusPlus } from '@g2p/cmder/readline/readline-plus-plus/readline-plus-plus'
-import { describe, test, expect, beforeEach } from 'bun:test'
-import { pushFrame, waitInput } from '@g2p/cmder/readline/create-interface/create-interface-plus-plus.mock'
+import { describe, test, beforeEach, expect } from 'bun:test'
+import { pushFrame, waitInput } from '@g2p/cmder/readline/create-interface/create-interface-plus-plus.mock.test'
+import { mockModule } from '@g2p/cmder/test/mock-module'
+
+await mockModule('@g2p/cmder/readline/create-interface/create-interface-plus-plus')
 
 describe('ReadLine Plus Plus', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     waitInput.mockReset()
     pushFrame.mockReset()
   })
+
   test('Captures a value', async () => {
     // const { createInterfacePlusPlus } = await import('@g2p/cmder/readline/create-interface/create-interface-plus-plus')
     waitInput.mockResolvedValueOnce('gravy' as never)

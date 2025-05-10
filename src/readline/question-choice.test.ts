@@ -1,14 +1,17 @@
-import { describe, test, expect } from 'bun:test'
 import {
   waitInput,
   frameCompiler,
   simKeyInput,
-} from '@g2p/cmder/readline/create-interface/create-interface-plus-plus.mock'
+} from '@g2p/cmder/readline/create-interface/create-interface-plus-plus.mock.test'
 import { QuestionChoice } from '@g2p/cmder/readline/question-choice'
 import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'
 import { OnDataEvents } from '@g2p/cmder/readline/create-interface/on-input-data'
 import { viteBulletOff, viteBulletOn } from '@g2p/cmder/readline/bullets/vite-bullets'
 import { nuxtBulletOff, nuxtBulletOn } from '@g2p/cmder/readline/bullets/nuxt-bullet'
+import { describe, expect, test } from 'bun:test'
+import { mockModule } from '@g2p/cmder/test/mock-module'
+
+await mockModule('@g2p/cmder/readline/create-interface/create-interface-plus-plus')
 
 const compileExpectedFrame = ({ header = '', on = viteBulletOn, off = viteBulletOff, options = ['a'], index = 0 }) =>
   textCompiler`{?|cyan} ${header}: {›|gray} {- Use arrow-keys. Enter to submit|gray}\n` +

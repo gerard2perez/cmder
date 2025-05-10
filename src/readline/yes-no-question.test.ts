@@ -1,12 +1,15 @@
-import { describe, test, expect } from 'bun:test'
 import {
   waitInput,
   frameCompiler,
   simKeyInput,
-} from '@g2p/cmder/readline/create-interface/create-interface-plus-plus.mock'
+} from '@g2p/cmder/readline/create-interface/create-interface-plus-plus.mock.test'
 import { yesNoQuestion } from '@g2p/cmder/readline/yes-no-question'
 import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'
 import { OnDataEvents } from '@g2p/cmder/readline/create-interface/on-input-data'
+import { describe, expect, test } from 'bun:test'
+import { mockModule } from '@g2p/cmder/test/mock-module'
+
+await mockModule('@g2p/cmder/readline/create-interface/create-interface-plus-plus')
 
 describe('Yes/No Question', () => {
   test('Initial State', () => {

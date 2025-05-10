@@ -3,7 +3,7 @@ preload = ["./src/plugins/cmder-plugin.ts"]
 [test]
 
 # always enable coverage
-preload = ["./src/plugins/test-pre-loader-plugin.ts"]
+# preload = ["./src/plugins/test-pre-loader-plugin.ts"]
 coverage = true
 coverageSkipTestFiles = true       # default false
 coverageReporter  = ["text", "lcov"]  # default ["text"]

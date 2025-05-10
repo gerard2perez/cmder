@@ -1,10 +1,10 @@
-import { _getArgv } from './getArgv'
+import { getArgv } from './get-argv'
 
 let input: string | undefined
 export function getInput() {
   if (input === undefined) {
     input = ''
-    const args = _getArgv()
+    const args = getArgv()
     for (let i = 0; i < args.length; i++) {
       const cArg = args.at(i)
       const nArg = args.at(i + 1)

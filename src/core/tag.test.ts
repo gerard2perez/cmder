@@ -1,9 +1,13 @@
-import { setArgv } from './test-utils'
+import { setArgv } from '@g2p/cmder/get-argv.mock.test'
 // must be imported second
 import { resetInput } from './input'
 import { RegisterParser, SyncTag } from './parser/index'
 import numberParser from './parsers/numberParser'
 import { tag } from './tag'
+import { afterEach, describe, expect, test } from 'bun:test'
+import { mockModule } from '@g2p/cmder/test/mock-module'
+
+await mockModule('@g2p/cmder/get-argv')
 
 describe('tag', () => {
   afterEach(() => {
@@ -46,7 +50,7 @@ describe('tag', () => {
     SyncTag('age', 'number', true)
     // #endregion
     const team = tag<string>('team', 'this is a description')
-    const ages = tag<number>('age', 'a', 'age of the team')
+    const ages = tag<number[]>('age', 'a', 'age of the team')
 
     expect(team).toBe('this is my team')
     expect(ages).toEqual([20, 40])

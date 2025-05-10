@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// @ts-expect-error no protocol support
-import { createInterfacePlusPlus } from 'original:./create-interface-plus-plus'
+import { createInterfacePlusPlus } from '@g2p/cmder/readline/create-interface/create-interface-plus-plus'
 import { KEYS } from '@g2p/cmder/readline/create-interface/on-input-data'
-import { describe, test, expect, beforeEach } from 'bun:test'
+import { beforeEach, describe, expect, test } from 'bun:test'
 import { Stream } from 'stream'
 
 export class STDIn extends Stream.Readable {

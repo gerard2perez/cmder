@@ -1,6 +1,10 @@
-import { setArgv } from './test-utils'
+import { setArgv } from '@g2p/cmder/get-argv.mock.test'
 // must be imported second
 import { clearInput, getInput, updateInput, resetInput } from './input'
+import { afterEach, beforeAll, describe, expect, test } from 'bun:test'
+import { mockModule } from '@g2p/cmder/test/mock-module'
+
+await mockModule('@g2p/cmder/get-argv')
 
 describe('input', () => {
   beforeAll(() => {

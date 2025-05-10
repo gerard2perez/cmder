@@ -1,10 +1,13 @@
-import { describe, test, expect } from 'bun:test'
-import { waitInput, frameCompiler } from '@g2p/cmder/readline/create-interface/create-interface-plus-plus.mock'
+import { waitInput, frameCompiler } from '@g2p/cmder/readline/create-interface/create-interface-plus-plus.mock.test'
 import { question } from '@g2p/cmder/readline/question'
+import { mockModule } from '@g2p/cmder/test/mock-module'
 import { textCompiler } from '@g2p/cmder/text-formatter/text-compiler'
+import { describe, expect, test } from 'bun:test'
 
-describe('Question', () => {
-  test('Initial State', () => {
+await mockModule('@g2p/cmder/readline/create-interface/create-interface-plus-plus')
+
+describe('Question', async () => {
+  test('Initial State', async () => {
     question('Hello', 'World')
     const frame = frameCompiler()
 
