@@ -1,26 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { isRef } from '@g2p/cmder/reactive/ref'
-type ContextBUilder = {
+
+type ContextBuilder = {
   key: string
   regExp: RegExp
-  value: FunctionConstructor
+  value: FunctionLike
 }
 
 export function withContext<T extends NonNullable<unknown>>(context: T, input: string) {
-  const computedProps: ContextBUilder[] = []
-  const functionalProps: ContextBUilder[] = []
-  const rawProps: ContextBUilder[] = []
+  const computedProps: ContextBuilder[] = []
+  const functionalProps: ContextBuilder[] = []
+  const rawProps: ContextBuilder[] = []
   for (const [key, data] of Object.entries(context)) {
-    const item = {
+    const item: ContextBuilder = {
       key,
       regExp: new RegExp(`{${key}([|}])`, 'gm'),
-      value: (() => undefined) as any,
-    }
+      value: () => undefined,
+    } satisfies ContextBuilder
     if (isRef(data)) {
       item.value = () => data.value
       computedProps.push(item)
     } else if (data instanceof Function) {
-      item.value = data
+      item.value = data as FunctionLike
       functionalProps.push(item)
     } else {
       item.value = () => data
@@ -45,7 +45,7 @@ export function withContext<T extends NonNullable<unknown>>(context: T, input: s
       ...computedProps,
       ...functionalProps.map((item) => ({
         ...item,
-        value: item.value.bind(null, objectContext as any),
+        value: item.value.bind(null, objectContext),
       })),
     ].reduce((result, { regExp, value }) => result.replaceAll(regExp, `{${value()}$1`), input)
   }

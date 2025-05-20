@@ -1,6 +1,6 @@
 import { onData } from '@g2p/cmder/readline/create-interface/on-input-data'
 import readline from 'node:readline/promises'
-import { ReadStream, WriteStream } from 'node:tty'
+import type { ReadStream, WriteStream } from 'node:tty'
 /**
  * Add support to show/hide cursor and use question with a template
  * Allow to throw error when ESC key is used and auto clean template on end

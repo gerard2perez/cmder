@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface TagParser {
   tag: string
   compact: boolean
@@ -41,3 +42,5 @@ interface Theme {
     secondary: string
   }
 }
+
+type FunctionLike = (...args: any[]) => any
