@@ -6,4 +6,4 @@ pre-push:
         bun run autobuild &&
         git add bin/index.js &&
         git commit -m "chore: rebuild cmder binaries" &&
-        git push
+        git push --no-verify
