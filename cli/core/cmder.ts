@@ -8,7 +8,7 @@ const help: boolean = tag('help', 'h', 'Render help') ?? false
 const command: string = arg()
 
 export default async function cmder() {
-  if (Bun.env.SUB_MODULES && !command && !help) {
+  if (import.meta.env.SUB_MODULES && !command && !help) {
     throw new Error(' A command is required')
   }
   const commands = [

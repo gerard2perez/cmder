@@ -12380,7 +12380,7 @@ var init_build = __esm(() => {
     const [output] = outputs;
     if (success && compile) {
       const r2 = Bun.spawnSync({
-        cmd: ["bun", "build", output.path, "--compile", "--outfile", `${outdir}/${name}`]
+        cmd: ["bun", "build", output.path, "--compile", "--outfile", `${outdir}/${name}.js`]
       });
       console.log(r2.stdout.toString());
       console.log(r2.stderr.toString());
@@ -12549,7 +12549,7 @@ var init_wizard3 = __esm(() => {
 
 // cli/core/cmder.ts
 async function cmder() {
-  if (Bun.env.SUB_MODULES && !command && !help) {
+  if (import.meta.env.SUB_MODULES && !command && !help) {
     throw new Error(" A command is required");
   }
   const commands = [
