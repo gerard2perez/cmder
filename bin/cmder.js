@@ -5329,7 +5329,7 @@ var init_runtime = __esm(() => {
         namespace: "virtual-entrypoint"
       }));
       build.onLoad({ filter: /.*/, namespace: "virtual-entrypoint" }, () => ({
-        contents: `import cmder from './cli/core'
+        contents: `import cmder from '@g2p/cmder'
 await cmder()`,
         loader: "ts"
       }));

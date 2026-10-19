@@ -11,7 +11,7 @@ export const CmderEntrypointPlugin: BunPlugin = {
     }))
 
     build.onLoad({ filter: /.*/, namespace: 'virtual-entrypoint' }, () => ({
-      contents: `import cmder from './cli/core'
+      contents: `import cmder from '@g2p/cmder'
 await cmder()`,
       loader: 'ts',
     }))
