@@ -1,3 +1,0 @@
-%app% %command% %arguments% {[options]|theme.tag.primary}
-  {This creates a beauty help|theme.text}
-   %tags%
