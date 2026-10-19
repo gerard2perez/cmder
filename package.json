@@ -9,7 +9,7 @@
   },
   "typings": "./src/core/index.ts",
   "bin": {
-    "cdr": "./bin/cmder"
+    "cdr": "./bin/index.js"
   },
   "scripts": {
     "autobuild": "NODE_ENV=production bun ./src/commands/build.ts build ./src -n cmder",

@@ -1,9 +1,7 @@
-pre-push:
+pre-commit:
   parallel: false
   jobs:
     - name: autobuild
       run: |
         bun run autobuild &&
         git add bin/index.js &&
-        git commit -m "chore: rebuild cmder binaries" &&
-        git push --no-verify
