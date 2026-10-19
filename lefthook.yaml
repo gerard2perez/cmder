@@ -2,4 +2,7 @@ pre-push:
   parallel: false
   jobs:
     - name: autobuild
-      run: bun run autobuild && git add bin/index.js && git commit -m "chore: rebuild cmder binaries"
+      run: |
+        bun run autobuild &&
+        git add bin/index.js &&
+        git commit -m "chore: rebuild cmder binaries"
