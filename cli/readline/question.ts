@@ -1,0 +1,21 @@
+import { promptSpy } from './readline-plus-plus/handlers'
+import { readLinePlusPlus } from './readline-plus-plus/readline-plus-plus'
+
+export async function question<T>(label: string, defaults: T): Promise<T> {
+  return readLinePlusPlus(
+    `{status} ${label}: {indicator} {placeholder}`,
+    {
+      defaults: defaults as string,
+    },
+    {
+      placeholder({ handler, defaults, result, ended }) {
+        return ended ? result ?? defaults : handler ? '' : `{${defaults}|gray}`
+      },
+    },
+    {
+      hideCursor: false,
+      handler: promptSpy(),
+      extractor: ({ result, defaults }) => ((result as T) || defaults) as T,
+    },
+  )
+}

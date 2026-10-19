@@ -58,7 +58,7 @@ var __esm = (fn, res, err) => () => {
 };
 var __require = import.meta.require;
 
-// src/core/get-argv.ts
+// cli/core/get-argv.ts
 function getArgv() {
   if (!argv.length) {
     argv = [...process.argv].splice(2);
@@ -70,7 +70,7 @@ var init_get_argv = __esm(() => {
   argv = [];
 });
 
-// src/core/input.ts
+// cli/core/input.ts
 function getInput() {
   if (input === undefined) {
     input = "";
@@ -1102,7 +1102,7 @@ var require_Reflect = __commonJS(function() {
   })(Reflect2 || (Reflect2 = {}));
 });
 
-// src/core/parser/mappings.ts
+// cli/core/parser/mappings.ts
 var parserMap, tagMap, argMap;
 var init_mappings = __esm(() => {
   parserMap = new Map;
@@ -1110,7 +1110,7 @@ var init_mappings = __esm(() => {
   argMap = [];
 });
 
-// src/core/parser/register.ts
+// cli/core/parser/register.ts
 function RegisterParser(type, parser) {
   parserMap.set(type, parser);
   return parser;
@@ -1121,7 +1121,7 @@ var init_register = __esm(() => {
   import_reflect_metadata = __toESM(require_Reflect(), 1);
 });
 
-// src/core/parsers/incomeParser.ts
+// cli/core/parsers/incomeParser.ts
 var incomeParser_default;
 var init_incomeParser = __esm(() => {
   init_register();
@@ -1131,7 +1131,7 @@ var init_incomeParser = __esm(() => {
   });
 });
 
-// src/core/parsers/numberParser.ts
+// cli/core/parsers/numberParser.ts
 var numberParser_default;
 var init_numberParser = __esm(() => {
   init_register();
@@ -1140,7 +1140,7 @@ var init_numberParser = __esm(() => {
   });
 });
 
-// src/core/parsers/booleanParser.ts
+// cli/core/parsers/booleanParser.ts
 var booleanParser_default;
 var init_booleanParser = __esm(() => {
   init_register();
@@ -1149,7 +1149,7 @@ var init_booleanParser = __esm(() => {
   });
 });
 
-// src/core/reactive/ref.ts
+// cli/core/reactive/ref.ts
 class Ref {
   value;
   constructor(value) {
@@ -1163,7 +1163,7 @@ function isRef(value) {
   return value instanceof Ref;
 }
 
-// src/core/parser/index.ts
+// cli/core/parser/index.ts
 function SyncTag(tag, type, multiple = false) {
   tagMap.set(tag, { type, multiple });
 }
@@ -1204,7 +1204,7 @@ var init_parser = __esm(() => {
   init_register();
 });
 
-// src/core/arg.ts
+// cli/core/arg.ts
 function arg() {
   const parser = getArgParser();
   return parseArg(getInput(), parser);
@@ -1214,7 +1214,7 @@ var init_arg = __esm(() => {
   init_parser();
 });
 
-// src/core/tag.ts
+// cli/core/tag.ts
 function tag(tag, _alias, _description) {
   const alias = !!_alias && !!_description ? _alias : undefined;
   const description = _description ?? _alias;
@@ -4113,7 +4113,7 @@ var require_cli_spinners = __commonJS(function(exports, module) {
   module.exports = spinners;
 });
 
-// src/core/text-formatter/register-formatter.ts
+// cli/core/text-formatter/register-formatter.ts
 function RegisterFormatter(fn, name) {
   Formatters.set(name, fn);
 }
@@ -4125,7 +4125,7 @@ var init_register_formatter = __esm(() => {
   Formatters = new Map;
 });
 
-// src/core/text-formatter/formatters/autowrap.ts
+// cli/core/text-formatter/formatters/autowrap.ts
 var wordWrap = (size) => new RegExp(`([^\\n]{1,${size}})(\\s|$)`, "g");
 var init_autowrap = __esm(() => {
   init_register_formatter();
@@ -4637,7 +4637,7 @@ var init_source = __esm(() => {
   source_default = chalk;
 });
 
-// src/core/text-formatter/formatters/colors.ts
+// cli/core/text-formatter/formatters/colors.ts
 var Color, chalkFns, SolidColors;
 var init_colors = __esm(() => {
   init_source();
@@ -4710,7 +4710,7 @@ var init_colors = __esm(() => {
   }, "rgb");
 });
 
-// src/core/text-formatter/formatters/highlight-basename.ts
+// cli/core/text-formatter/formatters/highlight-basename.ts
 import { basename, dirname, posix } from "path";
 function highlightBasename(path, primary = "green", secondary = "white") {
   const secondaryC = source_default[secondary];
@@ -4725,7 +4725,7 @@ var init_highlight_basename = __esm(() => {
   RegisterFormatter(highlightBasename, "highlightBasename");
 });
 
-// src/core/text-formatter/clean-color.ts
+// cli/core/text-formatter/clean-color.ts
 function cleanColor(input) {
   return typeof input === "string" ? input.replace(expression, "") : input;
 }
@@ -4738,7 +4738,7 @@ var init_clean_color = __esm(() => {
   expression = new RegExp(pattern, "g");
 });
 
-// src/core/text-formatter/formatters/currency.ts
+// cli/core/text-formatter/formatters/currency.ts
 var init_currency = __esm(() => {
   init_clean_color();
   init_register_formatter();
@@ -4752,7 +4752,7 @@ var init_currency = __esm(() => {
   }, "currency");
 });
 
-// src/core/terminal/istty.ts
+// cli/core/terminal/istty.ts
 var utf8, fixtures, isTTYSupported;
 var init_istty = __esm(() => {
   utf8 = /UTF-?8$/i.test(process.env.LC_ALL || process.env.LC_CTYPE || process.env.LANG || "");
@@ -4760,7 +4760,7 @@ var init_istty = __esm(() => {
   isTTYSupported = !process.env.MCE_TEST && (utf8 || fixtures || process.stdout.isTTY);
 });
 
-// src/core/text-formatter/symbols.ts
+// cli/core/text-formatter/symbols.ts
 var LogSymbols;
 var init_symbols = __esm(() => {
   init_istty();
@@ -4774,7 +4774,7 @@ var init_symbols = __esm(() => {
   })(LogSymbols ||= {});
 });
 
-// src/core/text-formatter/formatters/ico.ts
+// cli/core/text-formatter/formatters/ico.ts
 var init_ico = __esm(() => {
   init_symbols();
   init_register_formatter();
@@ -4786,7 +4786,7 @@ var init_ico = __esm(() => {
   }, "ico");
 });
 
-// src/core/text-formatter/formatters/padding.ts
+// cli/core/text-formatter/formatters/padding.ts
 var init_padding = __esm(() => {
   init_clean_color();
   init_register_formatter();
@@ -4802,7 +4802,7 @@ var init_padding = __esm(() => {
   }, "padr");
 });
 
-// src/core/text-formatter/formatters/index.ts
+// cli/core/text-formatter/formatters/index.ts
 var init_formatters = __esm(() => {
   init_autowrap();
   init_colors();
@@ -4813,7 +4813,7 @@ var init_formatters = __esm(() => {
   init_register_formatter();
 });
 
-// src/core/text-formatter/text-compiler.ts
+// cli/core/text-formatter/text-compiler.ts
 function templateStringReducer(text, ...values) {
   return text.reduce((message, part, index) => {
     return `${message}${part}${values[index] || ""}`;
@@ -4851,19 +4851,19 @@ var init_text_compiler = __esm(() => {
   BRAKED_E = String.fromCharCode(2);
 });
 
-// src/core/spinner/tick-compiler/random-number.ts
+// cli/core/spinner/tick-compiler/random-number.ts
 function randomNumber(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-// src/core/spinner/tick-compiler/random-digits.ts
+// cli/core/spinner/tick-compiler/random-digits.ts
 function randomDigits(length, to) {
   const number = to > length ? randomNumber(length, to) : Math.round(Math.random() * parseInt("".padStart(length, "9")));
   return `${number}`.padStart(length, "0");
 }
 var init_random_digits = () => {};
 
-// src/core/spinner/tick-compiler/random-letter.ts
+// cli/core/spinner/tick-compiler/random-letter.ts
 function randomLetter(length) {
   let letters = "";
   while (length--) {
@@ -4873,7 +4873,7 @@ function randomLetter(length) {
 }
 var init_random_letter = () => {};
 
-// src/core/reactive/computed-context.ts
+// cli/core/reactive/computed-context.ts
 function withContext(context, input) {
   const computedProps = [];
   const functionalProps = [];
@@ -4918,7 +4918,7 @@ function withContext(context, input) {
 }
 var init_computed_context = () => {};
 
-// src/core/spinner/spinner.ts
+// cli/core/spinner/spinner.ts
 function spinner(spinnerContext, template, spinnerKind = "dots") {
   const { interval, frames } = import_cli_spinners.default[spinnerKind];
   const { frame: preFrame } = withContext(spinnerContext, template);
@@ -4953,7 +4953,7 @@ var init_spinner = __esm(() => {
   import_cli_spinners = __toESM(require_cli_spinners(), 1);
 });
 
-// src/readline/create-interface/on-input-data.ts
+// cli/readline/create-interface/on-input-data.ts
 var KEYS, OnDataEvents, onData = ({ input, rl }, e) => {
   if (e.equals(KEYS.UP)) {
     input.emit("up_down", -1);
@@ -4985,7 +4985,7 @@ var init_on_input_data = __esm(() => {
   })(OnDataEvents ||= {});
 });
 
-// src/readline/readline-plus-plus/handlers.ts
+// cli/readline/readline-plus-plus/handlers.ts
 function upDownHandler(limit) {
   return (stdin) => {
     const selectedIndex = ref(0);
@@ -5021,7 +5021,7 @@ var init_handlers = __esm(() => {
   init_spinner();
 });
 
-// src/readline/create-interface/create-interface-plus-plus.ts
+// cli/readline/create-interface/create-interface-plus-plus.ts
 import readline from "readline/promises";
 function createInterfacePlusPlus(input, output, hideCursor, frameCompiler) {
   const abort = new AbortController;
@@ -5075,7 +5075,7 @@ var init_create_interface_plus_plus = __esm(() => {
   init_on_input_data();
 });
 
-// src/readline/readline-plus-plus/status-manager.ts
+// cli/readline/readline-plus-plus/status-manager.ts
 function statusManager() {
   const ended = ref(false);
   let succeeded = false;
@@ -5104,7 +5104,7 @@ var init_status_manager = __esm(() => {
   init_spinner();
 });
 
-// src/readline/readline-plus-plus/readline-plus-plus.ts
+// cli/readline/readline-plus-plus/readline-plus-plus.ts
 import { stdin as input2, stdout as output } from "process";
 async function errorTrap(promise) {
   let error = undefined;
@@ -5143,7 +5143,7 @@ var init_readline_plus_plus = __esm(() => {
   init_text_compiler();
 });
 
-// src/readline/question.ts
+// cli/readline/question.ts
 async function question(label, defaults) {
   return readLinePlusPlus(`{status} ${label}: {indicator} {placeholder}`, {
     defaults
@@ -5162,7 +5162,7 @@ var init_question = __esm(() => {
   init_readline_plus_plus();
 });
 
-// src/readline/bullets/vite-bullets.ts
+// cli/readline/bullets/vite-bullets.ts
 function viteBulletOn(option, index) {
   return `{${"\u276F"}|cyan}   {${pickColor(option, index)}|underline}`;
 }
@@ -5176,7 +5176,7 @@ var init_vite_bullets = __esm(() => {
   init_formatters();
 });
 
-// src/readline/question-choice.ts
+// cli/readline/question-choice.ts
 function manyFormatter(selectedIndex, options, on = viteBulletOn, off = viteBulletOff) {
   return options.map((option, index) => {
     return selectedIndex === index ? on(option, index) : off(option, index);
@@ -5213,12 +5213,12 @@ var init_question_choice = __esm(() => {
   init_handlers();
 });
 
-// src/readline/yes-no-question.ts
+// cli/readline/yes-no-question.ts
 var init_yes_no_question = __esm(() => {
   init_handlers();
   init_readline_plus_plus();
 });
-// src/core/terminal/wizard.ts
+// cli/core/terminal/wizard.ts
 async function wizard(steps, { onCancel = `{${"\u2716"}|red} {message}` } = {}) {
   const message = ref("");
   const errorCompiler = withContext({ message }, onCancel);
@@ -5240,7 +5240,7 @@ var init_wizard = __esm(() => {
   init_text_compiler();
 });
 
-// src/core/help-renderer.ts
+// cli/core/help-renderer.ts
 function renderArg({ name, multiple }, { theme }) {
   return multiple ? "..." + name : `<{${name}|${theme.arg}}>`;
 }
@@ -5317,7 +5317,7 @@ var init_help_renderer = __esm(() => {
   init_text_compiler();
 });
 
-// src/loaders/commands-store.ts
+// cli/loaders/commands-store.ts
 import { basename as basename2 } from "path";
 function getCommandName(urlpath) {
   return basename2(urlpath).replace(".hp", "").replace(".ts", "");
@@ -12133,7 +12133,7 @@ var init_dist = __esm(() => {
   $visitAsync = visit.visitAsync;
 });
 
-// src/core/help-default-theme.ts
+// cli/core/help-default-theme.ts
 var DEFAULT_HELP_THEME;
 var init_help_default_theme = __esm(() => {
   DEFAULT_HELP_THEME = {
@@ -12150,7 +12150,7 @@ var init_help_default_theme = __esm(() => {
   };
 });
 
-// src/loaders/hp-resolver.ts
+// cli/loaders/hp-resolver.ts
 import { readFileSync, existsSync } from "fs";
 function HPResolver(args) {
   const command = commands_store_default[getCommandName(args.path)];
@@ -12191,7 +12191,7 @@ var init_hp_resolver = __esm(() => {
   });
 });
 
-// src/loaders/command-resolver.ts
+// cli/loaders/command-resolver.ts
 import { readFileSync as readFileSync2 } from "fs";
 function CommandResolver(args) {
   let code = readFileSync2(args.path + ".ts", "utf8");
@@ -12242,7 +12242,8 @@ var init_command_resolver = __esm(() => {
   });
 });
 
-// src/loaders/cmder-loader.ts
+// cli/loaders/cmder-loader.ts
+import { join, resolve as resolve2 } from "path/posix";
 var transpiler3, cmderLoader;
 var init_cmder_loader = __esm(() => {
   init_commands_store();
@@ -12255,7 +12256,7 @@ var init_cmder_loader = __esm(() => {
     target: "bun",
     name: "cmder loader",
     async setup(build) {
-      const SUB_MODULES = Bun.env.SUB_MODULES ?? "./src/commands";
+      const ownCommandsPath = resolve2(".", Bun.env.CDR_ROOT ?? "cli", "commands");
       const { readFileSync, readdirSync } = await import("fs");
       if (!(process.argv0.includes("bun") || process.argv0.includes("cmder"))) {
         return;
@@ -12268,11 +12269,11 @@ var init_cmder_loader = __esm(() => {
         };
       });
       build.onLoad({ filter: /cmder.ts/ }, async (args) => {
-        let commands = readdirSync(Bun.env.SUB_MODULES ?? "./src/commands").map((cmd) => cmd.replace(".ts", "")).filter((cmd) => !cmd.includes(".hp"));
+        let commands = readdirSync(ownCommandsPath).map((cmd) => cmd.replace(".ts", "")).filter((cmd) => !cmd.includes(".hp"));
         commands = [...commands, ...commands.map((cmd) => `${cmd}.hp`)];
         const code = readFileSync(args.path, "utf8");
         const injection = `// import hack
-${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${SUB_MODULES}/${cmd}'),`).join(`
+${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${join(ownCommandsPath, cmd)}'),`).join(`
 `)}`;
         const injection1 = `// import hack
 '${commands.join(`',
@@ -12332,16 +12333,13 @@ ${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${SUB_MOD
   };
 });
 
-// virtual:./src/commands/build
+// virtual:/@gerard2perez/cmder/cli/commands/build
 var exports_build = {};
 var {build } = globalThis.Bun;
 var entrypoint, name, outdir = "./bin", presult;
 var init_build = __esm(() => {
-  init_parser();
   init_core();
   init_cmder_loader();
-  SyncArg("string");
-  SyncTag("name", "string", false);
   entrypoint = arg();
   name = tag("name", "n", "the name for the executable");
   presult = build({
@@ -12350,7 +12348,7 @@ var init_build = __esm(() => {
     format: "esm",
     minify: false,
     splitting: false,
-    root: "src",
+    root: Bun.env.CDR_ROOT ?? "cli",
     outdir,
     sourcemap: "none",
     plugins: [cmderLoader]
@@ -12369,7 +12367,7 @@ var init_build = __esm(() => {
   });
 });
 
-// virtual:./src/commands/demo
+// virtual:/@gerard2perez/cmder/cli/commands/demo
 var exports_demo = {};
 __export(exports_demo, {
   default: () => demo_default
@@ -12389,13 +12387,8 @@ var age, income, demo, doit, i = 0, AGE = "{digits:1:254}", time, j = 0, demo_de
   }, 30000);
 };
 var init_demo = __esm(() => {
-  init_parser();
   init_core();
   init_spinner();
-  SyncArg("number");
-  SyncTag("income", "Income", true);
-  SyncTag("demo", "string", false);
-  SyncTag("doit", "boolean", false);
   age = arg() ?? 10;
   income = tag("income", "i", "team member") ?? [{ amount: 10, iva: 0.1 }];
   demo = tag("demo", "d", "team member") ?? "she";
@@ -12406,7 +12399,7 @@ var init_demo = __esm(() => {
   }, 10);
 });
 
-// virtual:./src/commands/wizard
+// virtual:/@gerard2perez/cmder/cli/commands/wizard
 var exports_wizard = {};
 __export(exports_wizard, {
   default: () => wizard_default
@@ -12424,12 +12417,10 @@ var projectName, overrideOptions, wizard_default = async () => {
   console.log({ result });
 };
 var init_wizard2 = __esm(() => {
-  init_parser();
   init_core();
   init_question();
   init_question_choice();
   init_wizard();
-  SyncTag("projectName", "string", false);
   projectName = tag("project-name", "p", "The name of the project") ?? "";
   ((overrideOptions) => {
     overrideOptions["Remove existing files and continue"] = "remove";
@@ -12438,7 +12429,7 @@ var init_wizard2 = __esm(() => {
   })(overrideOptions ||= {});
 });
 
-// virtual:./src/commands/build.hp
+// virtual:/@gerard2perez/cmder/cli/commands/build.hp
 var exports_build2 = {};
 __export(exports_build2, {
   content: () => content,
@@ -12451,31 +12442,9 @@ var content = `%app% %command% %arguments% {[options]|theme.tag.primary}
 `, data, theme;
 var init_build2 = __esm(() => {
   data = {
-    command: "build",
-    arg: [
-      {
-        type: "string",
-        multiple: false,
-        compact: false,
-        name: "entrypoint",
-        args: []
-      }
-    ],
-    tag: [
-      {
-        type: "string",
-        multiple: false,
-        compact: false,
-        name: "name",
-        alias: "n",
-        description: "the name for the executable",
-        args: [
-          "name",
-          "n",
-          "the name for the executable"
-        ]
-      }
-    ]
+    arg: [],
+    tag: [],
+    command: "build"
   };
   theme = {
     arg: "green",
@@ -12491,7 +12460,7 @@ var init_build2 = __esm(() => {
   };
 });
 
-// virtual:./src/commands/demo.hp
+// virtual:/@gerard2perez/cmder/cli/commands/demo.hp
 var exports_demo2 = {};
 __export(exports_demo2, {
   content: () => content2,
@@ -12505,56 +12474,8 @@ var content2 = `{%app% %command%|yellow} %arguments% {[options]|cyan}
 `, data2, theme2;
 var init_demo2 = __esm(() => {
   data2 = {
-    arg: [
-      {
-        type: "number",
-        multiple: false,
-        compact: false,
-        name: "age",
-        args: []
-      }
-    ],
-    tag: [
-      {
-        type: "Income",
-        multiple: true,
-        compact: false,
-        name: "income",
-        alias: "i",
-        description: "team member",
-        args: [
-          "income",
-          "i",
-          "team member"
-        ]
-      },
-      {
-        type: "string",
-        multiple: false,
-        compact: false,
-        name: "demo",
-        alias: "d",
-        description: "team member",
-        args: [
-          "demo",
-          "d",
-          "team member"
-        ]
-      },
-      {
-        type: "boolean",
-        multiple: false,
-        compact: true,
-        name: "doit",
-        alias: "o",
-        description: "do something",
-        args: [
-          "do",
-          "o",
-          "do something"
-        ]
-      }
-    ],
+    arg: [],
+    tag: [],
     command: "demo"
   };
   theme2 = {
@@ -12571,7 +12492,7 @@ var init_demo2 = __esm(() => {
   };
 });
 
-// virtual:./src/commands/wizard.hp
+// virtual:/@gerard2perez/cmder/cli/commands/wizard.hp
 var exports_wizard2 = {};
 __export(exports_wizard2, {
   content: () => content3,
@@ -12585,21 +12506,7 @@ var content3 = `%app% %command% %arguments% {[options]|theme.tag.primary}
 var init_wizard3 = __esm(() => {
   data3 = {
     arg: [],
-    tag: [
-      {
-        type: "string",
-        multiple: false,
-        compact: false,
-        name: "projectName",
-        alias: "p",
-        description: "The name of the project",
-        args: [
-          "project-name",
-          "p",
-          "The name of the project"
-        ]
-      }
-    ],
+    tag: [],
     command: "wizard"
   };
   theme3 = {
@@ -12616,7 +12523,7 @@ var init_wizard3 = __esm(() => {
   };
 });
 
-// src/core/cmder.ts
+// cli/core/cmder.ts
 async function cmder() {
   if (Bun.env.SUB_MODULES && !command && !help) {
     throw new Error(" A command is required");
@@ -12665,7 +12572,7 @@ var init_cmder = __esm(() => {
   command = arg();
 });
 
-// src/core/index.ts
+// cli/core/index.ts
 var init_core = __esm(() => {
   init_input();
   init_incomeParser();
@@ -12682,6 +12589,6 @@ var init_core = __esm(() => {
   init_register();
 });
 
-// src/index.ts
+// cli/index.ts
 init_core();
 await cmder();

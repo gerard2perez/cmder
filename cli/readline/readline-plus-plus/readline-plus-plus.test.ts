@@ -1,0 +1,43 @@
+import { promptSpy } from './handlers'
+import { readLinePlusPlus } from './readline-plus-plus'
+import { describe, test, beforeEach, expect } from 'bun:test'
+import { pushFrame, waitInput } from '../create-interface/create-interface-plus-plus.mock.test'
+import { mockModule } from '../../test/mock-module'
+
+await mockModule('@g2p/cmder/readline/create-interface/create-interface-plus-plus')
+
+describe('ReadLine Plus Plus', () => {
+  beforeEach(async () => {
+    waitInput.mockReset()
+    pushFrame.mockReset()
+  })
+
+  test('Captures a value', async () => {
+    // const { createInterfacePlusPlus } = await import('@g2p/cmder/readline/create-interface/create-interface-plus-plus')
+    waitInput.mockResolvedValueOnce('gravy' as never)
+    const result = await readLinePlusPlus(
+      `Hello`,
+      { defaults: 'world' },
+      {},
+      { extractor: ({ result }) => result, handler: promptSpy(), hideCursor: true },
+    )
+
+    expect(waitInput).toHaveBeenCalled()
+    expect(result).toBe('gravy' as never)
+  })
+
+  test('User cancel prompt and error is thrown', async () => {
+    // const { createInterfacePlusPlus } = await import('@g2p/cmder/readline/create-interface/create-interface-plus-plus')
+    waitInput.mockRejectedValueOnce('Failed' as never)
+    const result = readLinePlusPlus(
+      `Hello`,
+      { defaults: 'world' },
+      {},
+      { extractor: ({ result }) => result, handler: promptSpy(), hideCursor: true },
+    )
+
+    await expect(result).rejects.toThrow()
+    expect(pushFrame).toHaveBeenCalledTimes(1)
+    expect(pushFrame).toHaveBeenCalledWith(true)
+  })
+})
