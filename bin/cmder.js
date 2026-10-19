@@ -12336,14 +12336,15 @@ ${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${join(ow
 // virtual:/@gerard2perez/cmder/cli/commands/build
 var exports_build = {};
 var {build } = globalThis.Bun;
-var entrypoint, name, outdir, presult;
+var entrypoint, name, outdir, compile, buildResult;
 var init_build = __esm(() => {
   init_core();
   init_cmder_loader();
   entrypoint = arg();
   name = tag("name", "n", "the name for the executable");
   outdir = tag("outout", "o", "Set the default output directory") ?? "./";
-  presult = build({
+  compile = tag("compile", "c", "Compile the output to a single file") ?? false;
+  buildResult = build({
     entrypoints: [entrypoint],
     target: "bun",
     format: "esm",
@@ -12355,16 +12356,16 @@ var init_build = __esm(() => {
     sourcemap: "none",
     plugins: [cmderLoader]
   });
-  presult.then(async ({ success, outputs, ...rest }) => {
+  buildResult.then(async ({ success, outputs, ...rest }) => {
     const [output] = outputs;
-    if (success) {
+    if (success && compile) {
       const r2 = Bun.spawnSync({
         cmd: ["bun", "build", output.path, "--compile", "--outfile", `${outdir}/${name}`]
       });
       console.log(r2.stdout.toString());
       console.log(r2.stderr.toString());
       outputs.forEach((bundle) => {});
-    } else {
+    } else if (!success) {
       console.log({ success, outputs, ...rest });
     }
   });
