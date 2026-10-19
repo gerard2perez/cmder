@@ -5317,6 +5317,29 @@ var init_help_renderer = __esm(() => {
   init_text_compiler();
 });
 
+// cli/plugins/cmder-entrypoint/runetime.ts
+import { resolve } from "path/posix";
+var CmderEntrypointPlugin;
+var init_runetime = __esm(() => {
+  CmderEntrypointPlugin = {
+    target: "bun",
+    name: "CMDer Entrypoint Plugin",
+    setup(build) {
+      build.onResolve({ filter: /^virtual:cmder-entrypoint$/ }, () => ({
+        path: "cmder-entrypoint",
+        namespace: "virtual-entrypoint"
+      }));
+      build.onLoad({ filter: /.*/, namespace: "virtual-entrypoint" }, () => ({
+        contents: `
+            import cmder from '${resolve(Bun.env.CDR_ROOT ?? "cli", "core")}'
+            await cmder()
+            `,
+        loader: "ts"
+      }));
+    }
+  };
+});
+
 // cli/loaders/commands-store.ts
 import { basename as basename2 } from "path";
 function getCommandName(urlpath) {
@@ -12243,7 +12266,7 @@ var init_command_resolver = __esm(() => {
 });
 
 // cli/loaders/cmder-loader.ts
-import { join, resolve as resolve2 } from "path/posix";
+import { join as join2, resolve as resolve3 } from "path/posix";
 var transpiler3, cmderLoader;
 var init_cmder_loader = __esm(() => {
   init_commands_store();
@@ -12256,7 +12279,7 @@ var init_cmder_loader = __esm(() => {
     target: "bun",
     name: "cmder loader",
     async setup(build) {
-      const ownCommandsPath = resolve2(".", Bun.env.CDR_ROOT ?? "cli", "commands");
+      const ownCommandsPath = resolve3(".", Bun.env.CDR_ROOT ?? "cli", "commands");
       const { readFileSync, readdirSync } = await import("fs");
       if (!(process.argv0.includes("bun") || process.argv0.includes("cmder"))) {
         return;
@@ -12273,7 +12296,7 @@ var init_cmder_loader = __esm(() => {
         commands = [...commands, ...commands.map((cmd) => `${cmd}.hp`)];
         const code = readFileSync(args.path, "utf8");
         const injection = `// import hack
-${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${join(ownCommandsPath, cmd)}'),`).join(`
+${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${join2(ownCommandsPath, cmd)}'),`).join(`
 `)}`;
         const injection1 = `// import hack
 '${commands.join(`',
@@ -12336,16 +12359,16 @@ ${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${join(ow
 // virtual:/@gerard2perez/cmder/cli/commands/build
 var exports_build = {};
 var {build } = globalThis.Bun;
-var entrypoint, name, outdir, compile, buildResult;
+var name, outdir, compile, buildResult;
 var init_build = __esm(() => {
+  init_runetime();
   init_core();
   init_cmder_loader();
-  entrypoint = arg();
   name = tag("name", "n", "the name for the executable");
   outdir = tag("outout", "o", "Set the default output directory") ?? "./";
   compile = tag("compile", "c", "Compile the output to a single file") ?? false;
   buildResult = build({
-    entrypoints: [entrypoint],
+    entrypoints: ["virtual:cmder-entrypoint"],
     target: "bun",
     format: "esm",
     minify: false,
@@ -12354,7 +12377,7 @@ var init_build = __esm(() => {
     naming: `${name}.js`,
     outdir,
     sourcemap: "none",
-    plugins: [cmderLoader]
+    plugins: [CmderEntrypointPlugin, cmderLoader]
   });
   buildResult.then(async ({ success, outputs, ...rest }) => {
     const [output] = outputs;
@@ -12593,6 +12616,6 @@ var init_core = __esm(() => {
   init_register();
 });
 
-// cli/index.ts
+// virtual-entrypoint:cmder-entrypoint
 init_core();
 await cmder();

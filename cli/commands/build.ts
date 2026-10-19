@@ -1,15 +1,17 @@
+import { CmderEntrypointPlugin } from 'plugins/cmder-entrypoint/runetime'
 import { arg, tag } from '../core'
 import { cmderLoader } from '../loaders/cmder-loader'
 import { build } from 'bun'
 
-const entrypoint: string = arg()
+// const entrypoint: string = arg()
 
-const name: string = tag('name', 'n', 'the name for the executable')!
+// const name: string = tag('name', 'n', 'the name for the executable')!
+const name: string = arg()
 const outdir: string = tag('outout', 'o', 'Set the default output directory') ?? './'
 const compile: boolean = tag('compile', 'c', 'Compile the output to a single file') ?? false
 
 const buildResult = build({
-  entrypoints: [entrypoint],
+  entrypoints: ['virtual:cmder-entrypoint'],
   target: 'bun',
   format: 'esm',
   minify: false,
@@ -18,7 +20,7 @@ const buildResult = build({
   naming: `${name}.js`,
   outdir,
   sourcemap: 'none',
-  plugins: [cmderLoader],
+  plugins: [CmderEntrypointPlugin, cmderLoader],
 })
 
 buildResult.then(async ({ success, outputs, ...rest }) => {
