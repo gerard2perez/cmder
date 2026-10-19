@@ -14,7 +14,7 @@ const presult = build({
   minify: false,
   splitting: false,
   root: Bun.env.CDR_ROOT ?? 'cli',
-  naming: `${name}.ts`,
+  naming: `${name}.js`,
   outdir,
   sourcemap: 'none',
   plugins: [cmderLoader],
