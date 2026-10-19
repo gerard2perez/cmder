@@ -6,8 +6,9 @@ const entrypoint: string = arg()
 
 const name: string = tag('name', 'n', 'the name for the executable')!
 const outdir: string = tag('outout', 'o', 'Set the default output directory') ?? './'
+const compile: boolean = tag('compile', 'c', 'Compile the output to a single file') ?? false
 
-const presult = build({
+const buildResult = build({
   entrypoints: [entrypoint],
   target: 'bun',
   format: 'esm',
@@ -20,9 +21,9 @@ const presult = build({
   plugins: [cmderLoader],
 })
 
-presult.then(async ({ success, outputs, ...rest }) => {
+buildResult.then(async ({ success, outputs, ...rest }) => {
   const [output] = outputs
-  if (success) {
+  if (success && compile) {
     const r2 = Bun.spawnSync({
       cmd: ['bun', 'build', output.path, '--compile', '--outfile', `${outdir}/${name}`],
     })
@@ -33,7 +34,7 @@ presult.then(async ({ success, outputs, ...rest }) => {
       // console.log(bundle)
       // import.meta.require('fs').unlinkSync(bundle.path)
     })
-  } else {
+  } else if (!success) {
     console.log({ success, outputs, ...rest })
   }
 })
