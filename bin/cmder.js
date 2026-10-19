@@ -12364,7 +12364,7 @@ var init_build = __esm(() => {
   init_runetime();
   init_core();
   init_cmder_loader();
-  name = tag("name", "n", "the name for the executable");
+  name = arg();
   outdir = tag("outout", "o", "Set the default output directory") ?? "./";
   compile = tag("compile", "c", "Compile the output to a single file") ?? false;
   buildResult = build({
