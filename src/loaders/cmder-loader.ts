@@ -12,7 +12,7 @@ export const cmderLoader: BunPlugin = {
   async setup(build) {
     const SUB_MODULES = Bun.env.SUB_MODULES ?? ('./src/commands' as string)
     const { readFileSync, readdirSync } = await import('fs')
-    if (!(process.argv0 === 'bun' || process.argv0.includes('cmder'))) {
+    if (!(process.argv0.includes('bun') || process.argv0.includes('cmder'))) {
       return
     }
     build.onResolve({ filter: /virtual/ }, (args) => {
