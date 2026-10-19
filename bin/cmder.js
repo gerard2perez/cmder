@@ -12549,7 +12549,7 @@ var init_wizard3 = __esm(() => {
 
 // cli/core/cmder.ts
 async function cmder() {
-  if (import.meta.env.SUB_MODULES && !command && !help) {
+  if (process.env.SUB_MODULES && !command && !help) {
     throw new Error(" A command is required");
   }
   const commands = [
