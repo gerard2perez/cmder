@@ -5317,10 +5317,9 @@ var init_help_renderer = __esm(() => {
   init_text_compiler();
 });
 
-// cli/plugins/cmder-entrypoint/runetime.ts
-import { resolve } from "path/posix";
+// cli/plugins/cmder-entrypoint/runtime.ts
 var CmderEntrypointPlugin;
-var init_runetime = __esm(() => {
+var init_runtime = __esm(() => {
   CmderEntrypointPlugin = {
     target: "bun",
     name: "CMDer Entrypoint Plugin",
@@ -5330,10 +5329,8 @@ var init_runetime = __esm(() => {
         namespace: "virtual-entrypoint"
       }));
       build.onLoad({ filter: /.*/, namespace: "virtual-entrypoint" }, () => ({
-        contents: `
-            import cmder from '${resolve(Bun.env.CDR_ROOT ?? "cli", "core")}'
-            await cmder()
-            `,
+        contents: `import cmder from './cli/core'
+await cmder()`,
         loader: "ts"
       }));
     }
@@ -12266,7 +12263,7 @@ var init_command_resolver = __esm(() => {
 });
 
 // cli/loaders/cmder-loader.ts
-import { join as join2, resolve as resolve3 } from "path/posix";
+import { join, resolve as resolve2 } from "path/posix";
 var transpiler3, cmderLoader;
 var init_cmder_loader = __esm(() => {
   init_commands_store();
@@ -12279,7 +12276,7 @@ var init_cmder_loader = __esm(() => {
     target: "bun",
     name: "cmder loader",
     async setup(build) {
-      const ownCommandsPath = resolve3(".", Bun.env.CDR_ROOT ?? "cli", "commands");
+      const ownCommandsPath = resolve2(".", Bun.env.CDR_ROOT ?? "cli", "commands");
       const { readFileSync, readdirSync } = await import("fs");
       if (!(process.argv0.includes("bun") || process.argv0.includes("cmder"))) {
         return;
@@ -12296,7 +12293,7 @@ var init_cmder_loader = __esm(() => {
         commands = [...commands, ...commands.map((cmd) => `${cmd}.hp`)];
         const code = readFileSync(args.path, "utf8");
         const injection = `// import hack
-${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${join2(ownCommandsPath, cmd)}'),`).join(`
+${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${join(ownCommandsPath, cmd)}'),`).join(`
 `)}`;
         const injection1 = `// import hack
 '${commands.join(`',
@@ -12361,7 +12358,7 @@ var exports_build = {};
 var {build } = globalThis.Bun;
 var name, outdir, compile, buildResult;
 var init_build = __esm(() => {
-  init_runetime();
+  init_runtime();
   init_core();
   init_cmder_loader();
   name = arg();

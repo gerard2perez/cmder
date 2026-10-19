@@ -1,3 +1,3 @@
-import { CmderEntrypointPlugin } from './runetime'
+import { CmderEntrypointPlugin } from './runtime'
 
 Bun.plugin(CmderEntrypointPlugin)

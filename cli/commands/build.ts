@@ -1,4 +1,4 @@
-import { CmderEntrypointPlugin } from 'plugins/cmder-entrypoint/runetime'
+import { CmderEntrypointPlugin } from 'plugins/cmder-entrypoint/runtime'
 import { arg, tag } from '../core'
 import { cmderLoader } from '../loaders/cmder-loader'
 import { build } from 'bun'

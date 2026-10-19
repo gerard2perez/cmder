@@ -1,5 +1,5 @@
 import type { BunPlugin } from 'bun'
-import { join, resolve } from 'path/posix'
+import { resolve } from 'path/posix'
 
 export const CmderEntrypointPlugin: BunPlugin = {
   target: 'bun',
@@ -11,10 +11,8 @@ export const CmderEntrypointPlugin: BunPlugin = {
     }))
 
     build.onLoad({ filter: /.*/, namespace: 'virtual-entrypoint' }, () => ({
-      contents: `
-            import cmder from '${resolve(Bun.env.CDR_ROOT ?? 'cli', 'core')}'
-            await cmder()
-            `,
+      contents: `import cmder from './cli/core'
+await cmder()`,
       loader: 'ts',
     }))
   },
