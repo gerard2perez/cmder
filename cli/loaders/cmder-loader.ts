@@ -25,7 +25,7 @@ export const cmderLoader: BunPlugin = {
     })
 
     // Detects all command in the project
-    build.onLoad({ filter: /cmder.ts/ }, async (args) => {
+    build.onLoad({ filter: /cmder\.ts/ }, async (args) => {
       let commands = readdirSync(ownCommandsPath)
         .map((cmd) => cmd.replace('.ts', ''))
         .filter((cmd) => !cmd.includes('.hp'))
@@ -45,7 +45,7 @@ export const cmderLoader: BunPlugin = {
 
     // injects code syncing tag
     // generates information to build help
-    build.onLoad({ filter: /.ts/ }, (args) => {
+    build.onLoad({ filter: /\.ts/ }, (args) => {
       let code = readFileSync(args.path, 'utf8')
 
       if (code.search(/import.*(tag|arg).*from.*@g2p\/cmder/) > -1) {
@@ -97,8 +97,8 @@ export const cmderLoader: BunPlugin = {
     })
 
     // loader for .hp (help) files
-    build.onLoad({ filter: /.hp$/ }, HPResolver)
-    build.onLoad({ filter: /.hp$/, namespace: 'virtual' }, HPResolver)
-    build.onLoad({ filter: /.*$/, namespace: 'virtual' }, CommandResolver)
+    build.onLoad({ filter: /\.hp$/ }, HPResolver)
+    build.onLoad({ filter: /\.hp$/, namespace: 'virtual' }, HPResolver)
+    build.onLoad({ filter: /\.*$/, namespace: 'virtual' }, CommandResolver)
   },
 }
