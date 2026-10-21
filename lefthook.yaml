@@ -6,6 +6,6 @@ pre-commit:
         bun run autobuild
       stage_fixed: true
 
-    # - name: git
-    #   run: |
-    #     git add bin/cmder.js
+    - name: git
+      run: |
+        git add ./bin/cmder.js
