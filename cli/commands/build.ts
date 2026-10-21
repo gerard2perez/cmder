@@ -1,7 +1,8 @@
-import { CmderEntrypointPlugin } from 'plugins/cmder-entrypoint/runtime'
+import { CmderEntrypointPlugin } from '../../plugins/cmder-entrypoint/runtime'
+import { CmderHelpGeneratorPlugin } from '../../plugins/cmder-help-generator/runtime'
 import { arg, tag } from '../core'
-import { cmderLoader } from '../loaders/cmder-loader'
 import { build } from 'bun'
+import { CmderVirtualCommandPlugin } from '../../plugins/cmder-virtual-command/runtime'
 
 // const entrypoint: string = arg()
 
@@ -20,7 +21,7 @@ const buildResult = build({
   naming: `${name}.js`,
   outdir,
   sourcemap: 'none',
-  plugins: [CmderEntrypointPlugin, cmderLoader],
+  plugins: [CmderEntrypointPlugin, CmderVirtualCommandPlugin, CmderHelpGeneratorPlugin],
 })
 
 buildResult.then(async ({ success, outputs, ...rest }) => {

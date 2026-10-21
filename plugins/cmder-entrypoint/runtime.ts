@@ -1,5 +1,5 @@
 import type { BunPlugin } from 'bun'
-import { resolve } from 'path/posix'
+import { DetectCommandsLoader } from './loader'
 
 export const CmderEntrypointPlugin: BunPlugin = {
   target: 'bun',
@@ -10,10 +10,11 @@ export const CmderEntrypointPlugin: BunPlugin = {
       namespace: 'virtual-entrypoint',
     }))
 
-    build.onLoad({ filter: /.*/, namespace: 'virtual-entrypoint' }, () => ({
-      contents: `import cmder from '@g2p/cmder'
-await cmder()`,
+    build.onLoad({ filter: /cmder-entrypoint/, namespace: 'virtual-entrypoint' }, () => ({
+      contents: `import cmder from '@g2p/cmder';\nawait cmder();`,
       loader: 'ts',
     }))
+
+    build.onLoad({ filter: /cmder\.ts/ }, DetectCommandsLoader)
   },
-} as BunPlugin
+}

@@ -4954,19 +4954,19 @@ var init_spinner = __esm(() => {
 });
 
 // cli/readline/create-interface/on-input-data.ts
-var KEYS, OnDataEvents, onData = ({ input, rl }, e) => {
+var KEYS, onData = ({ input, rl }, e) => {
   if (e.equals(KEYS.UP)) {
-    input.emit("up_down", -1);
+    input.emit("up_down" /* up_down */, -1);
   } else if (e.equals(KEYS.DOWN)) {
-    input.emit("up_down", 1);
+    input.emit("up_down" /* up_down */, 1);
   } else if (e.equals(KEYS.LEFT)) {
-    input.emit("left_right", -1);
+    input.emit("left_right" /* left_right */, -1);
   } else if (e.equals(KEYS.RIGHT)) {
-    input.emit("left_right", 1);
+    input.emit("left_right" /* left_right */, 1);
   } else if ([KEYS.CANCEL, KEYS.SIGINT].some((k) => e.equals(k))) {
-    input.emit("cancel");
+    input.emit("cancel" /* cancel */);
   }
-  input.emit("prompt", rl.line.length > 0);
+  input.emit("prompt" /* prompt */, rl.line.length > 0);
 };
 var init_on_input_data = __esm(() => {
   KEYS = {
@@ -4977,12 +4977,6 @@ var init_on_input_data = __esm(() => {
     CANCEL: Buffer.from([27]),
     SIGINT: Buffer.from([3])
   };
-  ((OnDataEvents) => {
-    OnDataEvents["up_down"] = "up_down";
-    OnDataEvents["left_right"] = "left_right";
-    OnDataEvents["cancel"] = "cancel";
-    OnDataEvents["prompt"] = "prompt";
-  })(OnDataEvents ||= {});
 });
 
 // cli/readline/readline-plus-plus/handlers.ts
@@ -4992,7 +4986,7 @@ function upDownHandler(limit) {
     const tick = ref(() => {
       return;
     });
-    stdin.on(OnDataEvents.up_down, (dir) => {
+    stdin.on("up_down" /* up_down */, (dir) => {
       selectedIndex.value += dir;
       if (selectedIndex.value < 0)
         selectedIndex.value = limit - 1;
@@ -5009,7 +5003,7 @@ function promptSpy() {
     const tick = ref(() => {
       return;
     });
-    stdin.on(OnDataEvents.prompt, (hasContent) => {
+    stdin.on("prompt" /* prompt */, (hasContent) => {
       handler.value = hasContent;
       tick.value();
     });
@@ -5317,9 +5311,38 @@ var init_help_renderer = __esm(() => {
   init_text_compiler();
 });
 
-// cli/plugins/cmder-entrypoint/runtime.ts
+// plugins/cmder-entrypoint/loader.ts
+import { join, resolve } from "path/posix";
+import { readFileSync, readdirSync } from "fs";
+async function DetectCommandsLoader(args) {
+  const rootPath = resolve(Bun.env.CDR_ROOT ?? "cli", "commands");
+  const commandList = readdirSync(rootPath).filter((cmd) => !cmd.includes(".hp")).map((cmd) => cmd.replace(".ts", ""));
+  const injectVirtual = commandList.map((cmd) => `['${cmd}']: async () => import('virtual:${join(rootPath, cmd)}.ts')`).join(`,
+`);
+  const injectHelp = commandList.map((cmd) => `['${cmd}.hp']: async () => import('help:${join(rootPath, cmd)}.hp')`).join(`,
+`);
+  const commands = `'${commandList.join(`',
+    '`)}'`;
+  const code = readFileSync(args.path, "utf8");
+  const injection = `// import hack
+${injectVirtual},
+${injectHelp}`;
+  const added = code.replace("// import hack", injection).replace("// autodetect files", commands);
+  const contents = transpiler.transformSync(added);
+  return {
+    contents,
+    loader: "ts"
+  };
+}
+var transpiler;
+var init_loader = __esm(() => {
+  transpiler = new Bun.Transpiler({ loader: "ts" });
+});
+
+// plugins/cmder-entrypoint/runtime.ts
 var CmderEntrypointPlugin;
 var init_runtime = __esm(() => {
+  init_loader();
   CmderEntrypointPlugin = {
     target: "bun",
     name: "CMDer Entrypoint Plugin",
@@ -5328,24 +5351,24 @@ var init_runtime = __esm(() => {
         path: "cmder-entrypoint",
         namespace: "virtual-entrypoint"
       }));
-      build.onLoad({ filter: /.*/, namespace: "virtual-entrypoint" }, () => ({
-        contents: `import cmder from '@g2p/cmder'
-await cmder()`,
+      build.onLoad({ filter: /cmder-entrypoint/, namespace: "virtual-entrypoint" }, () => ({
+        contents: `import cmder from '@g2p/cmder';
+await cmder();`,
         loader: "ts"
       }));
+      build.onLoad({ filter: /cmder\.ts/ }, DetectCommandsLoader);
     }
   };
 });
 
-// cli/loaders/commands-store.ts
+// plugins/commands-store.ts
 import { basename as basename2 } from "path";
 function getCommandName(urlpath) {
   return basename2(urlpath).replace(".hp", "").replace(".ts", "");
 }
-var commands, commands_store_default;
+var commandsStore;
 var init_commands_store = __esm(() => {
-  commands = {};
-  commands_store_default = commands;
+  commandsStore = {};
 });
 
 // node_modules/yaml/dist/nodes/identity.js
@@ -12170,11 +12193,11 @@ var init_help_default_theme = __esm(() => {
   };
 });
 
-// cli/loaders/hp-resolver.ts
-import { readFileSync, existsSync } from "fs";
-function HPResolver(args) {
-  const command = commands_store_default[getCommandName(args.path)];
-  const code = existsSync(args.path) ? readFileSync(args.path, "utf-8") : `%app% %command% %arguments% {[options]|theme.tag.primary}
+// plugins/cmder-help-generator/loader.ts
+import { readFileSync as readFileSync2, existsSync } from "fs";
+function HelpLoader(args) {
+  const command = commandsStore[getCommandName(args.path)];
+  const code = existsSync(args.path) ? readFileSync2(args.path, "utf-8") : `%app% %command% %arguments% {[options]|theme.tag.primary}
   {This creates a beauty help|theme.text}
    %tags%
 `;
@@ -12197,28 +12220,56 @@ function HPResolver(args) {
   export const data=${JSON.stringify(command, null, 2)}
   export const theme=${JSON.stringify(THEME, null, 2)}`;
   return {
-    contents: transpiler.transformSync(contents),
+    contents: transpiler2.transformSync(contents),
     loader: "js"
   };
 }
-var transpiler;
-var init_hp_resolver = __esm(() => {
+var transpiler2;
+var init_loader2 = __esm(() => {
   init_commands_store();
   init_dist();
   init_help_default_theme();
-  transpiler = new Bun.Transpiler({
-    loader: "ts"
-  });
+  transpiler2 = new Bun.Transpiler({ loader: "ts" });
 });
 
-// cli/loaders/command-resolver.ts
-import { readFileSync as readFileSync2 } from "fs";
-function CommandResolver(args) {
-  let code = readFileSync2(args.path + ".ts", "utf8");
+// plugins/cmder-help-generator/runtime.ts
+var compiled, CmderHelpGeneratorPlugin;
+var init_runtime2 = __esm(() => {
+  init_loader2();
+  compiled = ["cdr", "cmder"];
+  CmderHelpGeneratorPlugin = {
+    target: "bun",
+    name: "help loader",
+    async setup(build) {
+      if (!(process.argv0.includes("bun") || compiled.includes(process.argv0))) {
+        return;
+      }
+      build.onResolve({ filter: /\.hp$/ }, (args) => ({
+        path: args.path,
+        namespace: "help"
+      }));
+      build.onLoad({ filter: /./, namespace: "help" }, HelpLoader);
+    }
+  };
+});
+
+// plugins/cmder-virtual-command/resolver.ts
+function VirtualCommandResolver(args) {
+  const path = args.path.replace("virtual:", "");
+  return {
+    path,
+    namespace: "virtual"
+  };
+}
+
+// plugins/cmder-virtual-command/loader.ts
+import { readFileSync as readFileSync3 } from "fs";
+function VirtualCommandLoader(args) {
+  let code = readFileSync3(args.path, "utf8");
   const command = getCommandName(args.path);
-  commands_store_default[command] = commands_store_default[command] ?? { arg: [], tag: [] };
-  commands_store_default[command].command = command;
-  if (code.search(/import.*(tag|arg).*from.*@g2p\/cmder/) > -1) {
+  commandsStore[command] = commandsStore[command] ?? { arg: [], tag: [] };
+  commandsStore[command].command = command;
+  if (code.search(/import.*\b(tag|arg)\b.*from/) > -1) {
     const syncs = [];
     for (const [, , name, preType, kind, cmdArgs] of code.matchAll(/(const|let) *(.*): *(.*) *= *(tag|arg)\((.*)\).*/g)) {
       const [type, multiple] = preType.trim().split("[");
@@ -12227,12 +12278,12 @@ function CommandResolver(args) {
       } else {
         syncs.push(`SyncArg('${type}')`);
       }
-      commands_store_default[command][kind] = commands_store_default[command][kind] ?? [];
+      commandsStore[command][kind] = commandsStore[command][kind] ?? [];
       const _args = cmdArgs.replaceAll("'", "").split(",").map((arg) => arg.trim()).filter((f) => f);
-      if (commands_store_default[command][kind].find((f) => f.name === name)) {
+      if (commandsStore[command][kind].find((f) => f.name === name)) {
         continue;
       }
-      commands_store_default[command][kind].push({
+      commandsStore[command][kind].push({
         type,
         multiple: !!multiple,
         compact: type === "boolean",
@@ -12248,119 +12299,50 @@ function CommandResolver(args) {
 `)}
         ${code}`;
   }
-  const result = transpiler2.transformSync(code.replaceAll(/(import .*)( with \{.*)(;)?/gm, "$1$3"));
+  const result = transpiler3.transformSync(code.replaceAll(/(import .*)( with \{.*)(;)?/gm, "$1$3"));
   return {
     contents: result,
     loader: "ts"
   };
 }
-var transpiler2;
-var init_command_resolver = __esm(() => {
+var transpiler3;
+var init_loader3 = __esm(() => {
   init_commands_store();
-  transpiler2 = new Bun.Transpiler({
-    loader: "ts"
-  });
+  transpiler3 = new Bun.Transpiler({ loader: "ts" });
 });
 
-// cli/loaders/cmder-loader.ts
-import { join, resolve as resolve2 } from "path/posix";
-var transpiler3, cmderLoader;
-var init_cmder_loader = __esm(() => {
-  init_commands_store();
-  init_hp_resolver();
-  init_command_resolver();
-  transpiler3 = new Bun.Transpiler({
-    loader: "ts"
-  });
-  cmderLoader = {
+// plugins/cmder-virtual-command/runtime.ts
+var CmderVirtualCommandPlugin;
+var init_runtime3 = __esm(() => {
+  init_loader3();
+  CmderVirtualCommandPlugin = {
     target: "bun",
-    name: "cmder loader",
+    name: "Cmder virtual commands",
     async setup(build) {
-      const ownCommandsPath = resolve2(".", Bun.env.CDR_ROOT ?? "cli", "commands");
-      const { readFileSync, readdirSync } = await import("fs");
       if (!(process.argv0.includes("bun") || process.argv0.includes("cmder"))) {
         return;
       }
-      build.onResolve({ filter: /virtual/ }, (args) => {
-        const path = args.path.replace("virtual:", "");
-        return {
-          path,
-          namespace: "virtual"
-        };
-      });
-      build.onLoad({ filter: /cmder\.ts/ }, async (args) => {
-        let commands = readdirSync(ownCommandsPath).map((cmd) => cmd.replace(".ts", "")).filter((cmd) => !cmd.includes(".hp"));
-        commands = [...commands, ...commands.map((cmd) => `${cmd}.hp`)];
-        const code = readFileSync(args.path, "utf8");
-        const injection = `// import hack
-${commands.map((cmd) => `['${cmd}']: async () => await import('virtual:${join(ownCommandsPath, cmd)}'),`).join(`
-`)}`;
-        const injection1 = `// import hack
-'${commands.join(`',
-'`)}'`;
-        const added = code.replace("// import hack", injection).replace("// autodetect files", injection1);
-        const contents = transpiler3.transformSync(added);
-        return {
-          contents,
-          loader: "ts"
-        };
-      });
-      build.onLoad({ filter: /\.ts/ }, (args) => {
-        let code = readFileSync(args.path, "utf8");
-        if (code.search(/import.*(tag|arg).*from.*@g2p\/cmder/) > -1) {
-          const syncs = [];
-          for (const [, , name, preType, kind, cmdArgs] of code.matchAll(/(const|let) *(.*): *(.*) *= *(tag|arg)\((.*)\).*/g)) {
-            const [type, multiple] = preType.trim().split("[");
-            if (kind === "tag") {
-              syncs.push(`SyncTag('${name}','${type}',${!!multiple})`);
-            } else {
-              syncs.push(`SyncArg('${type}')`);
-            }
-            const command = getCommandName(args.path);
-            commands_store_default[command] = commands_store_default[command] ?? {};
-            commands_store_default[command].command = command;
-            commands_store_default[command][kind] = commands_store_default[command][kind] ?? [];
-            const _args = cmdArgs.replaceAll("'", "").split(",").map((arg) => arg.trim()).filter((f) => f);
-            if (commands_store_default[command][kind].find((f) => f.name === name)) {
-              continue;
-            }
-            commands_store_default[command][kind].push({
-              type,
-              multiple: !!multiple,
-              compact: type === "boolean",
-              name,
-              alias: _args.length > 2 ? _args[1] : undefined,
-              description: _args[_args.length - 1],
-              args: _args
-            });
-          }
-          code = `
-        import { SyncArg, SyncTag } from '@g2p/cmder/parser'
-          ${syncs.join(`
-`)}
-          ${code}`;
-        }
-        const result = transpiler3.transformSync(code.replaceAll(/(import .*)( with \{.*)(;)?/gm, "$1$3"));
-        return {
-          contents: result,
-          loader: "ts"
-        };
-      });
-      build.onLoad({ filter: /\.hp$/ }, HPResolver);
-      build.onLoad({ filter: /\.hp$/, namespace: "virtual" }, HPResolver);
-      build.onLoad({ filter: /\.*$/, namespace: "virtual" }, CommandResolver);
+      build.onResolve({ filter: /virtual:/ }, VirtualCommandResolver);
+      build.onLoad({ filter: /./, namespace: "virtual" }, VirtualCommandLoader);
     }
   };
 });
 
-// virtual:/@gerard2perez/cmder/cli/commands/build
+// virtual:/@gerard2perez/cmder/cli/commands/build.ts
 var exports_build = {};
 var {build } = globalThis.Bun;
 var name, outdir, compile, buildResult;
 var init_build = __esm(() => {
+  init_parser();
   init_runtime();
+  init_runtime2();
   init_core();
-  init_cmder_loader();
+  init_runtime3();
+  SyncArg("string");
+  SyncTag("name", "string", false);
+  SyncArg("string");
+  SyncTag("outdir", "string", false);
+  SyncTag("compile", "boolean", false);
   name = arg();
   outdir = tag("outout", "o", "Set the default output directory") ?? "./";
   compile = tag("compile", "c", "Compile the output to a single file") ?? false;
@@ -12374,7 +12356,7 @@ var init_build = __esm(() => {
     naming: `${name}.js`,
     outdir,
     sourcemap: "none",
-    plugins: [CmderEntrypointPlugin, cmderLoader]
+    plugins: [CmderEntrypointPlugin, CmderVirtualCommandPlugin, CmderHelpGeneratorPlugin]
   });
   buildResult.then(async ({ success, outputs, ...rest }) => {
     const [output] = outputs;
@@ -12391,7 +12373,7 @@ var init_build = __esm(() => {
   });
 });
 
-// virtual:/@gerard2perez/cmder/cli/commands/demo
+// virtual:/@gerard2perez/cmder/cli/commands/demo.ts
 var exports_demo = {};
 __export(exports_demo, {
   default: () => demo_default
@@ -12411,8 +12393,13 @@ var age, income, demo, doit, i = 0, AGE = "{digits:1:254}", time, j = 0, demo_de
   }, 30000);
 };
 var init_demo = __esm(() => {
+  init_parser();
   init_core();
   init_spinner();
+  SyncArg("number");
+  SyncTag("income", "Income", true);
+  SyncTag("demo", "string", false);
+  SyncTag("doit", "boolean", false);
   age = arg() ?? 10;
   income = tag("income", "i", "team member") ?? [{ amount: 10, iva: 0.1 }];
   demo = tag("demo", "d", "team member") ?? "she";
@@ -12423,7 +12410,7 @@ var init_demo = __esm(() => {
   }, 10);
 });
 
-// virtual:/@gerard2perez/cmder/cli/commands/wizard
+// virtual:/@gerard2perez/cmder/cli/commands/wizard.ts
 var exports_wizard = {};
 __export(exports_wizard, {
   default: () => wizard_default
@@ -12441,10 +12428,12 @@ var projectName, overrideOptions, wizard_default = async () => {
   console.log({ result });
 };
 var init_wizard2 = __esm(() => {
+  init_parser();
   init_core();
   init_question();
   init_question_choice();
   init_wizard();
+  SyncTag("projectName", "string", false);
   projectName = tag("project-name", "p", "The name of the project") ?? "";
   ((overrideOptions) => {
     overrideOptions["Remove existing files and continue"] = "remove";
@@ -12453,7 +12442,7 @@ var init_wizard2 = __esm(() => {
   })(overrideOptions ||= {});
 });
 
-// virtual:/@gerard2perez/cmder/cli/commands/build.hp
+// help:help:/@gerard2perez/cmder/cli/commands/build.hp
 var exports_build2 = {};
 __export(exports_build2, {
   content: () => content,
@@ -12466,8 +12455,63 @@ var content = `%app% %command% %arguments% {[options]|theme.tag.primary}
 `, data, theme;
 var init_build2 = __esm(() => {
   data = {
-    arg: [],
-    tag: [],
+    arg: [
+      {
+        type: "string",
+        multiple: false,
+        compact: false,
+        name: "entrypoint",
+        args: []
+      },
+      {
+        type: "string",
+        multiple: false,
+        compact: false,
+        name: "name",
+        args: []
+      }
+    ],
+    tag: [
+      {
+        type: "string",
+        multiple: false,
+        compact: false,
+        name: "name",
+        alias: "n",
+        description: "the name for the executable",
+        args: [
+          "name",
+          "n",
+          "the name for the executable"
+        ]
+      },
+      {
+        type: "string",
+        multiple: false,
+        compact: false,
+        name: "outdir",
+        alias: "o",
+        description: "Set the default output directory",
+        args: [
+          "outout",
+          "o",
+          "Set the default output directory"
+        ]
+      },
+      {
+        type: "boolean",
+        multiple: false,
+        compact: true,
+        name: "compile",
+        alias: "c",
+        description: "Compile the output to a single file",
+        args: [
+          "compile",
+          "c",
+          "Compile the output to a single file"
+        ]
+      }
+    ],
     command: "build"
   };
   theme = {
@@ -12484,22 +12528,69 @@ var init_build2 = __esm(() => {
   };
 });
 
-// virtual:/@gerard2perez/cmder/cli/commands/demo.hp
+// help:help:/@gerard2perez/cmder/cli/commands/demo.hp
 var exports_demo2 = {};
 __export(exports_demo2, {
   content: () => content2,
   data: () => data2,
   theme: () => theme2
 });
-var content2 = `{%app% %command%|yellow} %arguments% {[options]|cyan}
-  {This creates a beauty help|white}
+var content2 = `%app% %command% %arguments% {[options]|theme.tag.primary}
+  {This creates a beauty help|theme.text}
    %tags%
-
 `, data2, theme2;
 var init_demo2 = __esm(() => {
   data2 = {
-    arg: [],
-    tag: [],
+    arg: [
+      {
+        type: "number",
+        multiple: false,
+        compact: false,
+        name: "age",
+        args: []
+      }
+    ],
+    tag: [
+      {
+        type: "Income",
+        multiple: true,
+        compact: false,
+        name: "income",
+        alias: "i",
+        description: "team member",
+        args: [
+          "income",
+          "i",
+          "team member"
+        ]
+      },
+      {
+        type: "string",
+        multiple: false,
+        compact: false,
+        name: "demo",
+        alias: "d",
+        description: "team member",
+        args: [
+          "demo",
+          "d",
+          "team member"
+        ]
+      },
+      {
+        type: "boolean",
+        multiple: false,
+        compact: true,
+        name: "doit",
+        alias: "o",
+        description: "do something",
+        args: [
+          "do",
+          "o",
+          "do something"
+        ]
+      }
+    ],
     command: "demo"
   };
   theme2 = {
@@ -12510,13 +12601,13 @@ var init_demo2 = __esm(() => {
       secondary: "yellow"
     },
     tag: {
-      primary: "red",
-      secondary: "blue"
+      primary: "cyan",
+      secondary: "gray"
     }
   };
 });
 
-// virtual:/@gerard2perez/cmder/cli/commands/wizard.hp
+// help:help:/@gerard2perez/cmder/cli/commands/wizard.hp
 var exports_wizard2 = {};
 __export(exports_wizard2, {
   content: () => content3,
@@ -12530,7 +12621,21 @@ var content3 = `%app% %command% %arguments% {[options]|theme.tag.primary}
 var init_wizard3 = __esm(() => {
   data3 = {
     arg: [],
-    tag: [],
+    tag: [
+      {
+        type: "string",
+        multiple: false,
+        compact: false,
+        name: "projectName",
+        alias: "p",
+        description: "The name of the project",
+        args: [
+          "project-name",
+          "p",
+          "The name of the project"
+        ]
+      }
+    ],
     command: "wizard"
   };
   theme3 = {
@@ -12555,21 +12660,18 @@ async function cmder() {
   const commands = [
     "build",
     "demo",
-    "wizard",
-    "build.hp",
-    "demo.hp",
-    "wizard.hp"
+    "wizard"
   ];
   if (!help && !commands.includes(command)) {
     throw new Error(`A command named '${command}' does not exits`);
   }
   const originalScope = {
-    ["build"]: async () => await Promise.resolve().then(() => (init_build(), exports_build)),
-    ["demo"]: async () => await Promise.resolve().then(() => (init_demo(), exports_demo)),
-    ["wizard"]: async () => await Promise.resolve().then(() => (init_wizard2(), exports_wizard)),
-    ["build.hp"]: async () => await Promise.resolve().then(() => (init_build2(), exports_build2)),
-    ["demo.hp"]: async () => await Promise.resolve().then(() => (init_demo2(), exports_demo2)),
-    ["wizard.hp"]: async () => await Promise.resolve().then(() => (init_wizard3(), exports_wizard2))
+    ["build"]: async () => Promise.resolve().then(() => (init_build(), exports_build)),
+    ["demo"]: async () => Promise.resolve().then(() => (init_demo(), exports_demo)),
+    ["wizard"]: async () => Promise.resolve().then(() => (init_wizard2(), exports_wizard)),
+    ["build.hp"]: async () => Promise.resolve().then(() => (init_build2(), exports_build2)),
+    ["demo.hp"]: async () => Promise.resolve().then(() => (init_demo2(), exports_demo2)),
+    ["wizard.hp"]: async () => Promise.resolve().then(() => (init_wizard3(), exports_wizard2))
   };
   const cmd = originalScope[help ? `${command}.hp` : command];
   if (!cmd && help) {

@@ -1,6 +1,7 @@
 preload = [
-    "./cli/plugins/cmder-entrypoint",
-    "./cli/plugins/cmder-plugin.ts"
+    # "./plugins/cmder-entrypoint",
+    # "./plugins/cmder-virtual-command",
+    # "./plugins/cmder-help-generator",
 ]
 
 [test]

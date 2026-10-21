@@ -1,14 +1,12 @@
-import commandsStore, { getCommandName } from './commands-store'
+import { commandsStore, getCommandName } from '../commands-store'
 import type { OnLoadArgs, OnLoadResult } from 'bun'
 import { readFileSync, existsSync } from 'node:fs'
 import { parse } from 'yaml'
-import { DEFAULT_HELP_THEME } from '../core/help-default-theme'
+import { DEFAULT_HELP_THEME } from '../../cli/core/help-default-theme'
 
-const transpiler = new Bun.Transpiler({
-  loader: 'ts', // "js | "jsx" | "ts" | "tsx"
-})
+const transpiler = new Bun.Transpiler({ loader: 'ts' })
 
-export default function HPResolver(args: OnLoadArgs): OnLoadResult | Promise<OnLoadResult> {
+export function HelpLoader(args: OnLoadArgs): OnLoadResult | Promise<OnLoadResult> {
   const command = commandsStore[getCommandName(args.path)]
   const code = existsSync(args.path)
     ? readFileSync(args.path, 'utf-8')
