@@ -1,4 +1,4 @@
-import { ref } from '../../core/spinner/spinner'
+import { ref } from '../../spinner/spinner'
 /**
  * Handles common states used inside readLinePlusPlus
  */

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { withContext } from '../../core/reactive/computed-context'
-import { ref } from '../../core/reactive/ref'
+import { withContext } from '../../reactive/computed-context'
+import { ref } from '../../reactive/ref'
 import { createInterfacePlusPlus } from '../create-interface/create-interface-plus-plus'
 import { statusManager } from './status-manager'
-import { textCompiler } from '../../core/text-formatter/text-compiler'
+import { textCompiler } from '../../text-formatter/text-compiler'
 import { stdin as input, stdout as output } from 'node:process'
 import type { GetHandlerReturnType, HandlerType } from './handlers'
 

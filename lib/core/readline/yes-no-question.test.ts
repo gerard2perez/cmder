@@ -1,6 +1,6 @@
 import { waitInput, frameCompiler, simKeyInput } from './create-interface/create-interface-plus-plus.mock.test'
 import { yesNoQuestion } from './yes-no-question'
-import { textCompiler } from '../core/text-formatter/text-compiler'
+import { textCompiler } from '../text-formatter/text-compiler'
 import { OnDataEvents } from './create-interface/on-input-data'
 import { describe, expect, test } from 'bun:test'
 import { mockModule } from '../test/mock-module'

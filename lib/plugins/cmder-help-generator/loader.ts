@@ -2,7 +2,7 @@ import { commandsStore, getCommandName } from '../commands-store'
 import type { OnLoadArgs, OnLoadResult } from 'bun'
 import { readFileSync, existsSync } from 'node:fs'
 import { parse } from 'yaml'
-import { DEFAULT_HELP_THEME } from '../../cli/core/help-default-theme'
+import { DEFAULT_HELP_THEME } from '../../core/help-default-theme'
 
 const transpiler = new Bun.Transpiler({ loader: 'ts' })
 

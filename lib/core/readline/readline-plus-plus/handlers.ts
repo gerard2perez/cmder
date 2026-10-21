@@ -1,6 +1,6 @@
 import { OnDataEvents } from '../create-interface/on-input-data'
-import type { Ref } from '../../core/reactive/ref'
-import { ref } from '../../core/spinner/spinner'
+import type { Ref } from '../../reactive/ref'
+import { ref } from '../../spinner/spinner'
 import type { ReadStream } from 'node:tty'
 
 type ExtractHandlerRefValue<T> = T extends { handler: Ref<infer F> } ? F : never

@@ -1,7 +1,7 @@
-import { tag } from '../core'
-import { question } from '../readline/question'
-import { QuestionChoice } from '../readline/question-choice'
-import { wizard } from '../core/terminal/wizard'
+import { tag } from '../lib/core'
+import { question } from '../lib/core/readline/question'
+import { QuestionChoice } from '../lib/core/readline/question-choice'
+import { wizard } from '../lib/core/terminal/wizard'
 import { existsSync } from 'node:fs'
 
 const projectName: string = tag('project-name', 'p', 'The name of the project') ?? ''

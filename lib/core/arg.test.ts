@@ -5,7 +5,7 @@ import { resetInput } from './input'
 import { RegisterParser, SyncArg } from './parser/index'
 import numberParser from './parsers/numberParser'
 import { beforeEach, describe, expect, test } from 'bun:test'
-import { mockModule } from '../test/mock-module'
+import { mockModule } from './test/mock-module'
 
 await mockModule('@g2p/cmder/get-argv')
 

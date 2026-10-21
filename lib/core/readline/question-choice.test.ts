@@ -1,6 +1,6 @@
 import { waitInput, frameCompiler, simKeyInput } from './create-interface/create-interface-plus-plus.mock.test'
 import { QuestionChoice } from './question-choice'
-import { textCompiler } from '../core/text-formatter/text-compiler'
+import { textCompiler } from '../text-formatter/text-compiler'
 import { OnDataEvents } from './create-interface/on-input-data'
 import { viteBulletOff, viteBulletOn } from './bullets/vite-bullets'
 import { nuxtBulletOff, nuxtBulletOn } from './bullets/nuxt-bullet'

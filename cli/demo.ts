@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { arg, tag } from '../core'
-import spinner from '../core/spinner/spinner'
-import { ref } from '../core/reactive/ref'
-import { withContext } from '../core/reactive/computed-context'
+import { arg, tag } from '../lib/core'
+import spinner from '../lib/core/spinner/spinner'
+import { ref } from '../lib/core/reactive/ref'
+import { withContext } from '../lib/core/reactive/computed-context'
 // hello 0
 // /* hello 1 */
 // hello 2

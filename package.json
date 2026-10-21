@@ -4,17 +4,17 @@
   "description": "",
   "type": "module",
   "exports": {
-    ".": "./cli/core/index.ts",
-    "./parser": "./cli/core/parser/index.ts"
+    ".": "./lib/core/index.ts",
+    "./parser": "./lib/core/parser/index.ts"
   },
-  "typings": "./cli/core/index.ts",
+  "typings": "./lib/core/index.ts",
   "bin": {
     "cdr": "./bin/cmder.js"
   },
   "scripts": {
-    "autobuild": "NODE_ENV=production bun ./cli/commands/build.ts build cmder -o ./bin",
+    "autobuild": "NODE_ENV=production bun ./cli/build.ts build cmder -o ./bin",
     "compile": "NODE_ENV=compile bun build demo.ts --compile --outfile mycli",
-    "demo": "bun cli/commands/demo.ts 26 -i=10:0.15 -i=5:0 -d \"casa de mi heroe\"",
+    "demo": "bun cli/demo.ts 26 -i=10:0.15 -i=5:0 -d \"casa de mi heroe\"",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache"
   },
   "author": "Gerardo Pérez <gerard2perez@outlook.com>",

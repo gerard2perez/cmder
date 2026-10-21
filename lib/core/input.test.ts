@@ -2,7 +2,7 @@ import { setArgv } from './get-argv.mock.test'
 // must be imported second
 import { clearInput, getInput, updateInput, resetInput } from './input'
 import { afterEach, beforeAll, describe, expect, test } from 'bun:test'
-import { mockModule } from '../test/mock-module'
+import { mockModule } from './test/mock-module'
 
 await mockModule('@g2p/cmder/get-argv')
 

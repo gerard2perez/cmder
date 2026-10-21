@@ -1,7 +1,7 @@
 import { waitInput, frameCompiler } from './create-interface/create-interface-plus-plus.mock.test'
 import { question } from './question'
 import { mockModule } from '../test/mock-module'
-import { textCompiler } from '../core/text-formatter/text-compiler'
+import { textCompiler } from '../text-formatter/text-compiler'
 import { describe, expect, test } from 'bun:test'
 
 await mockModule('@g2p/cmder/readline/create-interface/create-interface-plus-plus')

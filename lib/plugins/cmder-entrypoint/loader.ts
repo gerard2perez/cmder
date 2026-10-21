@@ -8,7 +8,7 @@ const transpiler = new Bun.Transpiler({ loader: 'ts' })
  * Detect all commands in the commands folder and inject them into the cmder.ts file
  */
 export async function DetectCommandsLoader(args: OnLoadArgs) {
-  const rootPath = resolve(Bun.env.CDR_ROOT ?? 'cli', 'commands')
+  const rootPath = resolve(Bun.env.CDR_ROOT ?? 'cli')
 
   const commandList = readdirSync(rootPath)
     .filter((cmd) => !cmd.includes('.hp'))

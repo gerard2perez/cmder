@@ -1,8 +1,8 @@
-import { CmderEntrypointPlugin } from '../../plugins/cmder-entrypoint/runtime'
-import { CmderHelpGeneratorPlugin } from '../../plugins/cmder-help-generator/runtime'
-import { arg, tag } from '../core'
+import { CmderEntrypointPlugin } from '../lib/plugins/cmder-entrypoint/runtime'
+import { CmderHelpGeneratorPlugin } from '../lib/plugins/cmder-help-generator/runtime'
+import { arg, tag } from '../lib/core'
 import { build } from 'bun'
-import { CmderVirtualCommandPlugin } from '../../plugins/cmder-virtual-command/runtime'
+import { CmderVirtualCommandPlugin } from '../lib/plugins/cmder-virtual-command/runtime'
 
 // const entrypoint: string = arg()
 

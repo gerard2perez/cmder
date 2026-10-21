@@ -1,4 +1,4 @@
-import { SolidColors } from '../../core/text-formatter/formatters'
+import { SolidColors } from '../../text-formatter/formatters'
 
 export const pickColor = (opt: string, index: number) => {
   return `{${opt}|${SolidColors[index % SolidColors.length]}}`
