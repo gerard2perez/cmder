@@ -1,6 +1,6 @@
 import { type BunPlugin } from 'bun'
 import { VirtualCommandResolver } from './resolver'
-import { VirtualCommandLoader } from './loader'
+import { ParametersSyncLoader } from './loader'
 
 export const CmderVirtualCommandPlugin: BunPlugin = {
   target: 'bun',
@@ -10,6 +10,6 @@ export const CmderVirtualCommandPlugin: BunPlugin = {
       return
     }
     build.onResolve({ filter: /virtual:/ }, VirtualCommandResolver)
-    build.onLoad({ filter: /./, namespace: 'virtual' }, VirtualCommandLoader)
+    build.onLoad({ filter: /./, namespace: 'virtual' }, ParametersSyncLoader)
   },
 }

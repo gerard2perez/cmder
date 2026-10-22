@@ -8,7 +8,7 @@ const transpiler = new Bun.Transpiler({ loader: 'ts' })
  * Transform the tag and arg function to Sync version for runtime at the same time
  * it capture metadata information used to build help
  */
-export function VirtualCommandLoader(args: OnLoadArgs): OnLoadResult | Promise<OnLoadResult> {
+export function ParametersSyncLoader(args: OnLoadArgs): OnLoadResult | Promise<OnLoadResult> {
   let code = readFileSync(args.path, 'utf8')
   const command = getCommandName(args.path)
   commandsStore[command] = commandsStore[command] ?? { arg: [], tag: [] }

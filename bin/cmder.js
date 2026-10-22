@@ -12264,7 +12264,7 @@ function VirtualCommandResolver(args) {
 
 // lib/plugins/cmder-virtual-command/loader.ts
 import { readFileSync as readFileSync3 } from "fs";
-function VirtualCommandLoader(args) {
+function ParametersSyncLoader(args) {
   let code = readFileSync3(args.path, "utf8");
   const command = getCommandName(args.path);
   commandsStore[command] = commandsStore[command] ?? { arg: [], tag: [] };
@@ -12323,7 +12323,7 @@ var init_runtime3 = __esm(() => {
         return;
       }
       build.onResolve({ filter: /virtual:/ }, VirtualCommandResolver);
-      build.onLoad({ filter: /./, namespace: "virtual" }, VirtualCommandLoader);
+      build.onLoad({ filter: /./, namespace: "virtual" }, ParametersSyncLoader);
     }
   };
 });
@@ -12331,7 +12331,7 @@ var init_runtime3 = __esm(() => {
 // virtual:/@gerard2perez/cmder/cli/build.ts
 var exports_build = {};
 var {build } = globalThis.Bun;
-var name, outdir, compile, buildResult;
+var name, compile, outdir, buildResult;
 var init_build = __esm(() => {
   init_parser();
   init_runtime();
@@ -12341,11 +12341,11 @@ var init_build = __esm(() => {
   SyncArg("string");
   SyncTag("name", "string", false);
   SyncArg("string");
-  SyncTag("outdir", "string", false);
   SyncTag("compile", "boolean", false);
+  SyncTag("outdir", "string", false);
   name = arg();
-  outdir = tag("outout", "o", "Set the default output directory") ?? "./";
   compile = tag("compile", "c", "Compile the output to a single file") ?? false;
+  outdir = tag("outout", "o", "Set the default output directory") ?? "./";
   buildResult = build({
     entrypoints: ["virtual:cmder-entrypoint"],
     target: "bun",
@@ -12362,11 +12362,16 @@ var init_build = __esm(() => {
     const [output] = outputs;
     if (success && compile) {
       const r2 = Bun.spawnSync({
-        cmd: ["bun", "build", output.path, "--compile", "--outfile", `${outdir}/${name}.js`]
+        cmd: ["bun", "build", output.path, "--compile", "--outfile", `${outdir}/${name}`]
       });
       console.log(r2.stdout.toString());
       console.log(r2.stderr.toString());
-      outputs.forEach((bundle) => {});
+      const file = `${outdir}/${name}.js`;
+      const contents = await Bun.file(file).text();
+      if (!contents.startsWith("#!")) {
+        await Bun.write(file, `#!/usr/bin/env bun
+${contents}`);
+      }
     } else if (!success) {
       console.log({ success, outputs, ...rest });
     }
@@ -12486,19 +12491,6 @@ var init_build2 = __esm(() => {
         ]
       },
       {
-        type: "string",
-        multiple: false,
-        compact: false,
-        name: "outdir",
-        alias: "o",
-        description: "Set the default output directory",
-        args: [
-          "outout",
-          "o",
-          "Set the default output directory"
-        ]
-      },
-      {
         type: "boolean",
         multiple: false,
         compact: true,
@@ -12509,6 +12501,19 @@ var init_build2 = __esm(() => {
           "compile",
           "c",
           "Compile the output to a single file"
+        ]
+      },
+      {
+        type: "string",
+        multiple: false,
+        compact: false,
+        name: "outdir",
+        alias: "o",
+        description: "Set the default output directory",
+        args: [
+          "outout",
+          "o",
+          "Set the default output directory"
         ]
       }
     ],
