@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 // @bun
 var __create = Object.create;
 var __getProtoOf = Object.getPrototypeOf;
@@ -1145,7 +1146,7 @@ var booleanParser_default;
 var init_booleanParser = __esm(() => {
   init_register();
   booleanParser_default = RegisterParser("boolean", function booleanParser(data) {
-    return data === "true" || data === "-h";
+    return data !== undefined;
   });
 });
 
@@ -12339,13 +12340,11 @@ var init_build = __esm(() => {
   init_core();
   init_runtime3();
   SyncArg("string");
-  SyncTag("name", "string", false);
-  SyncArg("string");
   SyncTag("compile", "boolean", false);
   SyncTag("outdir", "string", false);
   name = arg();
   compile = tag("compile", "c", "Compile the output to a single file") ?? false;
-  outdir = tag("outout", "o", "Set the default output directory") ?? "./";
+  outdir = tag("output", "o", "Set the default output directory") ?? "./";
   buildResult = build({
     entrypoints: ["virtual:cmder-entrypoint"],
     target: "bun",
@@ -12366,14 +12365,14 @@ var init_build = __esm(() => {
       });
       console.log(r2.stdout.toString());
       console.log(r2.stderr.toString());
-      const file = `${outdir}/${name}.js`;
-      const contents = await Bun.file(file).text();
-      if (!contents.startsWith("#!")) {
-        await Bun.write(file, `#!/usr/bin/env bun
-${contents}`);
-      }
     } else if (!success) {
       console.log({ success, outputs, ...rest });
+    }
+    const file = `${outdir}/${name}.js`;
+    const contents = await Bun.file(file).text();
+    if (!contents.startsWith("#!")) {
+      await Bun.write(file, `#!/usr/bin/env bun
+${contents}`);
     }
   });
 });
@@ -12465,31 +12464,11 @@ var init_build2 = __esm(() => {
         type: "string",
         multiple: false,
         compact: false,
-        name: "entrypoint",
-        args: []
-      },
-      {
-        type: "string",
-        multiple: false,
-        compact: false,
         name: "name",
         args: []
       }
     ],
     tag: [
-      {
-        type: "string",
-        multiple: false,
-        compact: false,
-        name: "name",
-        alias: "n",
-        description: "the name for the executable",
-        args: [
-          "name",
-          "n",
-          "the name for the executable"
-        ]
-      },
       {
         type: "boolean",
         multiple: false,
@@ -12511,7 +12490,7 @@ var init_build2 = __esm(() => {
         alias: "o",
         description: "Set the default output directory",
         args: [
-          "outout",
+          "output",
           "o",
           "Set the default output directory"
         ]
